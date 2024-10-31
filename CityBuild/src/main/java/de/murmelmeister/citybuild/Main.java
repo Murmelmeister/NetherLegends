@@ -11,6 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Main {
     private final CityBuild instance;
     private final Logger logger;
@@ -31,6 +34,7 @@ public class Main {
     private final Commands commands;
 
     private BukkitTask scoreboardTask;
+    private final Map<Player, TestScoreboard> playerTestScoreboard = new ConcurrentHashMap<>();
 
     public Main(CityBuild instance) {
         this.instance = instance;
@@ -54,6 +58,7 @@ public class Main {
         instance.getServer().getMessenger().unregisterOutgoingPluginChannel(instance);
 
         if (scoreboardTask != null && !scoreboardTask.isCancelled()) scoreboardTask.cancel();
+        playerTestScoreboard.clear();
     }
 
     public void enable() {
@@ -66,10 +71,8 @@ public class Main {
         commands.register();
         instance.getServer().getMessenger().registerOutgoingPluginChannel(instance, "BungeeCord");
         scoreboardTask = instance.getServer().getScheduler().runTaskTimer(instance, () -> {
-            for (Player player : instance.getServer().getOnlinePlayers()) {
-                TestScoreboard scoreboard = new TestScoreboard(player, this);
-                scoreboard.run();
-            }
+            for (Player player : instance.getServer().getOnlinePlayers())
+                playerTestScoreboard.computeIfAbsent(player, user -> new TestScoreboard(user, this)).run();
         }, 0L, 1L);
     }
 
