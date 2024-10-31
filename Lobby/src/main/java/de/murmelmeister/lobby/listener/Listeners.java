@@ -3,7 +3,6 @@ package de.murmelmeister.lobby.listener;
 import de.murmelmeister.lobby.Lobby;
 import de.murmelmeister.lobby.Main;
 import de.murmelmeister.lobby.api.Locations;
-import de.murmelmeister.lobby.api.SchedulerTask;
 import de.murmelmeister.lobby.configs.Config;
 import de.murmelmeister.lobby.configs.Message;
 import de.murmelmeister.lobby.listener.listeners.*;
@@ -17,7 +16,6 @@ public class Listeners implements Listener {
     public final Main main;
     public final Lobby instance;
     public final ListUtil listUtil;
-    public final SchedulerTask schedulerTask;
     public final Locations locations;
 
     public final Config config;
@@ -29,7 +27,6 @@ public class Listeners implements Listener {
         this.listUtil = main.getListUtil();
         this.config = main.getConfig();
         this.message = main.getMessage();
-        this.schedulerTask = main.getSchedulerTask();
         this.locations = main.getLocations();
     }
 

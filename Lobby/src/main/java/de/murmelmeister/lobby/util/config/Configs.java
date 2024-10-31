@@ -1,6 +1,5 @@
 package de.murmelmeister.lobby.util.config;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public enum Configs {
@@ -37,8 +36,6 @@ public enum Configs {
     EVENT_PROTECTED_PLAYER_CHANGE_LEVEL("Event.Protected.PlayerChange.Level", 2023),
     EVENT_PROTECTED_PLAYER_CHANGE_EXP("Event.Protected.PlayerChange.Exp", 1.0F / 12 * 6),
     EVENT_LOBBY_ITEMS_CITY_BUILD("Event.LobbyItems.CityBuild", "CityBuild"),
-    SCOREBOARD_ENABLE_TAB_LIST("Scoreboard.Enable.TabList", true),
-    SCOREBOARD_UPDATE_TAB_LIST("Scoreboard.Update.TabList", 2L),
     LOBBY_ITEMS_NAVIGATOR_MATERIAL("Lobby.Items.Navigator.Material", Material.RECOVERY_COMPASS.name()),
     LOBBY_ITEMS_NAVIGATOR_DISPLAY_NAME("Lobby.Items.Navigator.DisplayName", "&8» &5Navigator &8« &7(RIGHT CLICK)"),
     LOBBY_ITEMS_NAVIGATOR_INVENTORY_NAME("Lobby.Items.Navigator.InventoryName", "&5Navigator"),

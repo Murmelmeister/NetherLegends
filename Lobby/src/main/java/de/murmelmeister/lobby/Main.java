@@ -1,13 +1,18 @@
 package de.murmelmeister.lobby;
 
 import de.murmelmeister.lobby.api.Locations;
-import de.murmelmeister.lobby.api.SchedulerTask;
 import de.murmelmeister.lobby.command.Commands;
 import de.murmelmeister.lobby.configs.Config;
 import de.murmelmeister.lobby.configs.Message;
 import de.murmelmeister.lobby.listener.Listeners;
 import de.murmelmeister.lobby.util.ListUtil;
+import de.murmelmeister.lobby.util.TablistUtil;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
     private final Lobby instance;
@@ -16,11 +21,13 @@ public class Main {
 
     private final Config config;
     private final Message message;
-    private final SchedulerTask schedulerTask;
     private final Locations locations;
 
     private final Listeners listeners;
     private final Commands commands;
+
+    private BukkitTask tablistTask;
+    private final Map<Player, TablistUtil> playerTablistUtil = new ConcurrentHashMap<>();
 
     public Main(Lobby instance) {
         this.instance = instance;
@@ -28,7 +35,6 @@ public class Main {
         this.listUtil = new ListUtil();
         this.config = new Config(this);
         this.message = new Message(this);
-        this.schedulerTask = new SchedulerTask(this);
         this.locations = new Locations(this);
         this.listeners = new Listeners(this);
         this.commands = new Commands(this);
@@ -36,6 +42,8 @@ public class Main {
 
     public void disable() {
         instance.getServer().getMessenger().unregisterOutgoingPluginChannel(instance);
+        if (tablistTask != null && !tablistTask.isCancelled()) tablistTask.cancel();
+        playerTablistUtil.clear();
     }
 
     public void enable() {
@@ -46,6 +54,10 @@ public class Main {
         listeners.register();
         commands.register();
         instance.getServer().getMessenger().registerOutgoingPluginChannel(instance, "BungeeCord");
+        tablistTask = instance.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            for (Player player : instance.getServer().getOnlinePlayers())
+                playerTablistUtil.computeIfAbsent(player, user -> new TablistUtil(player, this)).setScoreboardTabList();
+        }, 0L, 1L);
     }
 
     public Lobby getInstance() {
@@ -66,10 +78,6 @@ public class Main {
 
     public Message getMessage() {
         return message;
-    }
-
-    public SchedulerTask getSchedulerTask() {
-        return schedulerTask;
     }
 
     public Locations getLocations() {
