@@ -37,6 +37,7 @@ public class Listeners implements Listener {
         addListener(new OtherListener(main));
         addListener(new LobbyItemsListener(main));
         addListener(new ConnectListener(main));
+        addListener(new RespawnListener(main));
     }
 
     private void addListener(Listener listener) {
