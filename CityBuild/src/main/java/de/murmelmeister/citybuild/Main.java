@@ -36,7 +36,6 @@ public class Main {
         this.instance = instance;
         this.logger = instance.getSLF4JLogger();
         this.listUtil = new ListUtil();
-        //this.mysql = new MySQL(logger);
         this.config = new Config(this);
         this.message = new Message(this);
         this.schedulerTask = new SchedulerTask(this);
@@ -53,6 +52,8 @@ public class Main {
 
     public void disable() {
         instance.getServer().getMessenger().unregisterOutgoingPluginChannel(instance);
+
+        if (scoreboardTask != null && !scoreboardTask.isCancelled()) scoreboardTask.cancel();
     }
 
     public void enable() {
@@ -64,12 +65,12 @@ public class Main {
         listeners.register();
         commands.register();
         instance.getServer().getMessenger().registerOutgoingPluginChannel(instance, "BungeeCord");
-
         scoreboardTask = instance.getServer().getScheduler().runTaskTimer(instance, () -> {
-            for (Player all : instance.getServer().getOnlinePlayers()) {
-                new TestScoreboard(all, this);
+            for (Player player : instance.getServer().getOnlinePlayers()) {
+                TestScoreboard scoreboard = new TestScoreboard(player, this);
+                scoreboard.run();
             }
-        }, 0L , 20L);
+        }, 0L, 1L);
     }
 
     public CityBuild getInstance() {

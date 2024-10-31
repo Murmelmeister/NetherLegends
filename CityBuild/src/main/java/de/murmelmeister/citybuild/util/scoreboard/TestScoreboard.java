@@ -1,50 +1,46 @@
 package de.murmelmeister.citybuild.util.scoreboard;
 
-import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.Main;
 import de.murmelmeister.citybuild.api.Economy;
-import de.murmelmeister.citybuild.api.SchedulerTask;
 import de.murmelmeister.citybuild.configs.Config;
 import de.murmelmeister.citybuild.configs.Message;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
 public class TestScoreboard extends ScoreboardBuilder {
-    private CityBuild instance;
-    private Server server;
-    private Config config;
-    private final SchedulerTask schedulerTask;
+    //private BukkitTask task;
 
     public TestScoreboard(Player player, Main main) {
-        super(player, Component.text("Dummy"), main);
-        this.schedulerTask = main.getSchedulerTask();
-        //update();
+        super(player, main);
     }
 
+    /*public void start() {
+        task = main.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(main.getInstance(), this, 0L, 20L);
+    }
+
+    public void stop() {
+        if (task != null && task.isCancelled()) task.cancel();
+    }*/
+
     @Override
-    public void createScoreboard() {
+    protected void createScoreboard() {
         setScoreboard();
     }
 
     @Override
-    public void update() {
-        schedulerTask.addBukkitTask(player,
-                server.getScheduler().runTaskTimerAsynchronously(instance, this::setScoreboard, 2L, config.getLong(Configs.SCOREBOARD_UPDATE_SCORE_TIMER) * 20L));
+    protected void updateScoreboard() {
+        setScoreboard();
     }
 
     private void setScoreboard() {
-        this.instance = main.getInstance();
-        this.server = main.getInstance().getServer();
-        this.config = main.getConfig();
-        Message message = main.getMessage();
-        Economy economy = main.getEconomy();
-        DecimalFormat decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
+        final Config config = main.getConfig();
+        final Message message = main.getMessage();
+        final Economy economy = main.getEconomy();
+        final DecimalFormat decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
         setDisplayName(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_DISPLAY_NAME)));
 
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_15))

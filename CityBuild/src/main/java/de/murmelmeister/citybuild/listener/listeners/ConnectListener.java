@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ConnectListener extends Listeners {
+    //private TestScoreboard scoreboard;
+
     public ConnectListener(Main main) {
         super(main);
     }
@@ -62,7 +64,10 @@ public class ConnectListener extends Listeners {
 
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_TAB_LIST)) setScoreboardTabList(player, instance.getServer());
         /*if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCOREBOARD))
-            if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) new TestScoreboard(player, main);*/
+            if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) {
+                this.scoreboard = new TestScoreboard(player, main);
+                scoreboard.start();
+            }*&
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_MESSAGE))
             player.sendMessage(HexColor.format(message.getString(Messages.EVENT_JOIN_MESSAGE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_TITLE))
@@ -86,6 +91,8 @@ public class ConnectListener extends Listeners {
         listUtil.getGodMode().remove(player.getUniqueId());
         listUtil.getLive().remove(player.getUniqueId());
         player.getServer().getScheduler().getPendingTasks().forEach(bukkitTask -> schedulerTask.removeBukkitTask(player, bukkitTask));
+        /*if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCOREBOARD))
+            if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) scoreboard.stop();*/
     }
 
     public void setScoreboardTabList(Player player, Server server) {

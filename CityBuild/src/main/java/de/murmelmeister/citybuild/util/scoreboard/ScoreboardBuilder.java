@@ -2,22 +2,23 @@ package de.murmelmeister.citybuild.util.scoreboard;
 
 import de.murmelmeister.citybuild.Main;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
 import java.util.Objects;
 
-public abstract class ScoreboardBuilder {
-    protected final Scoreboard scoreboard;
-    protected final Objective objective;
+public abstract class ScoreboardBuilder implements Runnable {
+    private final Scoreboard scoreboard;
+    private final Objective objective;
 
     protected final Player player;
     protected final Main main;
 
-    public ScoreboardBuilder(Player player, Component displayName, Main main) {
-        this.main = main;
+    public ScoreboardBuilder(Player player, Main main) {
         this.player = player;
+        this.main = main;
         if (player.getScoreboard().equals(Bukkit.getScoreboardManager().getMainScoreboard()))
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
@@ -26,48 +27,53 @@ public abstract class ScoreboardBuilder {
         if (this.scoreboard.getObjective("display") != null)
             Objects.requireNonNull(this.scoreboard.getObjective("display")).unregister();
 
-        this.objective = this.scoreboard.registerNewObjective("display", Criteria.DUMMY, displayName);
+        this.objective = this.scoreboard.registerNewObjective("display", Criteria.DUMMY, Component.text("Default Scoreboard", NamedTextColor.DARK_PURPLE));
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         createScoreboard();
     }
 
-    public abstract void createScoreboard();
+    @Override
+    public void run() {
+        if (player.getScoreboard() != null && player.getScoreboard().getObjective("display") != null)
+            updateScoreboard();
+        else createScoreboard();
+    }
 
-    public abstract void update();
+    protected abstract void createScoreboard();
 
-    public void setDisplayName(Component displayName) {
+    protected abstract void updateScoreboard();
+
+    protected void setDisplayName(Component displayName) {
         this.objective.displayName(displayName);
     }
 
-    @Deprecated
-    public void setDisplayName(String displayName) {
+    protected void setDisplayName(String displayName) {
         this.objective.setDisplayName(displayName);
     }
 
-    public void setScoreContent(String content, int score) {
+    protected void setScoreContent(String content, int score) {
         this.objective.getScore(content).setScore(score);
     }
 
-    public void removeScoreContent(String content) {
+    protected void removeScoreContent(String content) {
         this.scoreboard.resetScores(content);
     }
 
-    public void setScoreTeam(Component content, int score) {
+    protected void setScoreTeam(Component content, int score) {
         Team team = getTeamByScore(score);
         if (team == null) return;
         team.prefix(content);
         showScore(score);
     }
 
-    @Deprecated
-    public void setScoreTeam(String content, int score) {
+    protected void setScoreTeam(String content, int score) {
         Team team = getTeamByScore(score);
         if (team == null) return;
         team.setPrefix(content);
         showScore(score);
     }
 
-    public void removeScoreTeam(int score) {
+    protected void removeScoreTeam(int score) {
         hideScore(score);
     }
 
