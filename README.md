@@ -1,7 +1,7 @@
 __Necronic__
 
-Java: 17
+Java: 21
 
-Minecraft Server Version: Paper 1.20.1
+Minecraft Server Version: Paper 1.21.1
 
 Plugin systems for Necronic.net.
