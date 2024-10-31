@@ -6,7 +6,12 @@
 
     <groupId>de.murmelmeister.necronic</groupId>
     <artifactId>Necronic</artifactId>
-    <version>0.0.1-ALPHA-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>CityBuild</module>
+        <module>Lobby</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
