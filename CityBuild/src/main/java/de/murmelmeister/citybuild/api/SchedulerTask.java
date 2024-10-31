@@ -2,8 +2,8 @@ package de.murmelmeister.citybuild.api;
 
 import de.murmelmeister.citybuild.Main;
 import de.murmelmeister.citybuild.configs.Config;
+import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
-import de.murmelmeister.murmelapi.util.ConfigUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -30,8 +30,7 @@ public class SchedulerTask {
 
     public void create(Player player) {
         String fileName = player.getUniqueId() + ".yml";
-        this.file = new File(String.format("plugins//%s//SchedulerTask//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        ConfigUtil.createFile(logger, file, fileName);
+        this.file = FileUtil.createFile(logger, String.format("plugins//%s//SchedulerTask//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

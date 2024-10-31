@@ -2,10 +2,9 @@ package de.murmelmeister.citybuild.api;
 
 import de.murmelmeister.citybuild.Main;
 import de.murmelmeister.citybuild.configs.Config;
+import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
-import de.murmelmeister.murmelapi.util.ConfigUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -26,8 +25,7 @@ public class Settings {
 
     public void create(UUID uuid) {
         String fileName = uuid + ".yml";
-        this.file = new File(String.format("plugins//%s//Settings//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        ConfigUtil.createFile(logger, file, fileName);
+        this.file = FileUtil.createFile(logger, String.format("plugins//%s//Settings//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

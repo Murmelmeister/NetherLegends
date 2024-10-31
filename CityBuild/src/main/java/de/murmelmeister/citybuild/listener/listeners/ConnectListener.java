@@ -61,8 +61,8 @@ public class ConnectListener extends Listeners {
         }
 
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_TAB_LIST)) setScoreboardTabList(player, instance.getServer());
-        if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCOREBOARD))
-            if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) new TestScoreboard(player, main);
+        /*if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCOREBOARD))
+            if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) new TestScoreboard(player, main);*/
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_MESSAGE))
             player.sendMessage(HexColor.format(message.getString(Messages.EVENT_JOIN_MESSAGE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_TITLE))

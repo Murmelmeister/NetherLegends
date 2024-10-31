@@ -12,7 +12,7 @@
     <name>Lobby</name>
 
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://www.youtube.com/Murmelmeister</url>
@@ -55,10 +55,6 @@
 
     <repositories>
         <repository>
-            <id>byteminer</id>
-            <url>https://www.byteminer.net/maven/</url>
-        </repository>
-        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -70,15 +66,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>de.murmelmeister.murmelapi</groupId>
-            <artifactId>MurmelAPI</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

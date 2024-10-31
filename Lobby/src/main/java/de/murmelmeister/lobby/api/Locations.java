@@ -2,8 +2,8 @@ package de.murmelmeister.lobby.api;
 
 import de.murmelmeister.lobby.Main;
 import de.murmelmeister.lobby.configs.Config;
+import de.murmelmeister.lobby.util.FileUtil;
 import de.murmelmeister.lobby.util.config.Configs;
-import de.murmelmeister.murmelapi.util.ConfigUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -32,8 +32,7 @@ public class Locations {
 
     public void create() {
         String fileName = "locations.yml";
-        this.file = new File(String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        ConfigUtil.createFile(logger, file, fileName);
+        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

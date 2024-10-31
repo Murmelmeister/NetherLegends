@@ -1,10 +1,10 @@
 package de.murmelmeister.lobby.configs;
 
 import de.murmelmeister.lobby.Main;
+import de.murmelmeister.lobby.util.FileUtil;
 import de.murmelmeister.lobby.util.HexColor;
 import de.murmelmeister.lobby.util.config.Configs;
 import de.murmelmeister.lobby.util.config.Messages;
-import de.murmelmeister.murmelapi.util.ConfigUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
 
@@ -31,8 +31,7 @@ public class Message {
 
     public void create() {
         String fileName = "message.yml";
-        this.file = new File(String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        ConfigUtil.createFile(logger, file, fileName);
+        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

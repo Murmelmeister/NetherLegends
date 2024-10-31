@@ -141,7 +141,7 @@ public class LobbyItemsListener extends Listeners {
         ItemStack itemStack = new ItemStack(Material.GRASS_BLOCK);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        itemMeta.setDisplayName(HexColor.format("&8» #3f00e4CityBuild &8(&71.20.1&8)"));
+        itemMeta.setDisplayName(HexColor.format("&8» #3f00e4CityBuild &8(&71.21.1&8)"));
         List<String> lores = new ArrayList<>();
         lores.add(HexColor.format("&7This is a CityBuild server that is"));
         lores.add(HexColor.format("&7special in the distant future."));

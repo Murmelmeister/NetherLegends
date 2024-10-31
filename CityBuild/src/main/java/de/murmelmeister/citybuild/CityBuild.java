@@ -19,4 +19,8 @@ public final class CityBuild extends JavaPlugin {
     public void onEnable() {
         main.enable();
     }
+
+    public Main getMain() {
+        return main;
+    }
 }

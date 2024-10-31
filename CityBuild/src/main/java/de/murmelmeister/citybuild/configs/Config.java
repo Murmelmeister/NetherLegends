@@ -1,8 +1,8 @@
 package de.murmelmeister.citybuild.configs;
 
 import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
-import de.murmelmeister.murmelapi.util.ConfigUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
 
@@ -27,8 +27,7 @@ public class Config {
 
     public void create() {
         String fileName = "config.yml";
-        this.file = new File(String.format("plugins//%s//", Configs.FILE_NAME.getValue()), fileName);
-        ConfigUtil.createFile(logger, file, fileName);
+        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", Configs.FILE_NAME.getValue()), fileName);
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

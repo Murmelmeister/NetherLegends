@@ -4,7 +4,6 @@ import de.murmelmeister.citybuild.Main;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
-import de.murmelmeister.murmelapi.util.MySQL;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +27,6 @@ public class CityBuildReloadCommand extends CommandManager {
 
         this.config.create();
         this.message.create();
-        MySQL.createFile(logger, String.format("plugins//%s//", config.getString(Configs.FILE_NAME)), "mysql");
         this.locations.create();
         this.itemValue.create();
         sendMessage(sender, message.getString(Messages.COMMAND_RELOAD));
