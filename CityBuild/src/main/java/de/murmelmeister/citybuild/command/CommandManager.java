@@ -26,7 +26,6 @@ public abstract class CommandManager extends Commands implements TabExecutor {
     public final ListUtil listUtil;
     public final Config config;
     public final Message message;
-    public final SchedulerTask schedulerTask;
     public final Cooldown cooldown;
     public final Locations locations;
     public final Homes homes;
@@ -41,7 +40,6 @@ public abstract class CommandManager extends Commands implements TabExecutor {
         this.listUtil = main.getListUtil();
         this.config = main.getConfig();
         this.message = main.getMessage();
-        this.schedulerTask = main.getSchedulerTask();
         this.cooldown = main.getCooldown();
         this.locations = main.getLocations();
         this.homes = main.getHomes();

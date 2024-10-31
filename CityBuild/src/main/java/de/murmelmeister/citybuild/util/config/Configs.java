@@ -3,7 +3,6 @@ package de.murmelmeister.citybuild.util.config;
 import org.bukkit.Material;
 
 public enum Configs {
-
     PREFIX_ENABLE("Prefix.Enable", true),
     FILE_NAME("FileName", "CityBuild"),
     CURRENT_SERVER("CurrentServer", "CityBuild"),
@@ -154,8 +153,6 @@ public enum Configs {
     HOME_LIMIT_DEFAULT("Home.Limit.Default", 4),
     HOME_LIMIT_RANK("Home.Limit.Rank", 8),
     HOME_LIMIT_TEAM("Home.Limit.Team", 12),
-    SCOREBOARD_ENABLE_TAB_LIST("Scoreboard.Enable.TabList", true),
-    SCOREBOARD_UPDATE_TAB_LIST("Scoreboard.Update.TabList", 2L),
     SCOREBOARD_ENABLE_SCORE_15("Scoreboard.Enable.Score.15", false),
     SCOREBOARD_ENABLE_SCORE_14("Scoreboard.Enable.Score.14", false),
     SCOREBOARD_ENABLE_SCORE_13("Scoreboard.Enable.Score.13", false),

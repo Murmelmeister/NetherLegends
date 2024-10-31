@@ -19,7 +19,6 @@ public class Listeners implements Listener {
 
     public final Config config;
     public final Message message;
-    public final SchedulerTask schedulerTask;
     public final Cooldown cooldown;
     public final Locations locations;
     public final Homes homes;
@@ -33,7 +32,6 @@ public class Listeners implements Listener {
         this.listUtil = main.getListUtil();
         this.config = main.getConfig();
         this.message = main.getMessage();
-        this.schedulerTask = main.getSchedulerTask();
         this.cooldown = main.getCooldown();
         this.locations = main.getLocations();
         this.homes = main.getHomes();

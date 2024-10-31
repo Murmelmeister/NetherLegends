@@ -12,19 +12,9 @@ import org.bukkit.entity.Player;
 import java.text.DecimalFormat;
 
 public class TestScoreboard extends ScoreboardBuilder {
-    //private BukkitTask task;
-
     public TestScoreboard(Player player, Main main) {
         super(player, main);
     }
-
-    /*public void start() {
-        task = main.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(main.getInstance(), this, 0L, 20L);
-    }
-
-    public void stop() {
-        if (task != null && task.isCancelled()) task.cancel();
-    }*/
 
     @Override
     protected void createScoreboard() {

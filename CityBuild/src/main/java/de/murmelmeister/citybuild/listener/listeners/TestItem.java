@@ -27,7 +27,7 @@ public class TestItem extends Listeners {
         player.getOpenInventory().setItem(22, createItem(Material.IRON_LEGGINGS, "Test-3"));
         player.getOpenInventory().setItem(23, createItem(Material.IRON_BOOTS, "Test-4"));
 
-        schedulerTask.addBukkitTask(player, player.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> player.sendActionBar("TP: " + testPoints), 20L, 20L));
+        player.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> player.sendActionBar("TP: " + testPoints), 20L, 20L);
     }
 
     @EventHandler

@@ -6,6 +6,7 @@ import de.murmelmeister.citybuild.configs.Config;
 import de.murmelmeister.citybuild.configs.Message;
 import de.murmelmeister.citybuild.listener.Listeners;
 import de.murmelmeister.citybuild.util.ListUtil;
+import de.murmelmeister.citybuild.util.TablistUtil;
 import de.murmelmeister.citybuild.util.scoreboard.TestScoreboard;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -21,7 +22,6 @@ public class Main {
 
     private final Config config;
     private final Message message;
-    private final SchedulerTask schedulerTask;
     private final Cooldown cooldown;
     private final Locations locations;
     private final Homes homes;
@@ -33,7 +33,9 @@ public class Main {
     private final Commands commands;
 
     private BukkitTask scoreboardTask;
+    private BukkitTask tablistTask;
     private final Map<Player, TestScoreboard> playerTestScoreboard = new ConcurrentHashMap<>();
+    private final Map<Player, TablistUtil> playerTablistUtil = new ConcurrentHashMap<>();
 
     public Main(CityBuild instance) {
         this.instance = instance;
@@ -41,7 +43,6 @@ public class Main {
         this.listUtil = new ListUtil();
         this.config = new Config(this);
         this.message = new Message(this);
-        this.schedulerTask = new SchedulerTask(this);
         this.cooldown = new Cooldown(this);
         this.locations = new Locations(this);
         this.homes = new Homes(this);
@@ -56,7 +57,9 @@ public class Main {
         instance.getServer().getMessenger().unregisterOutgoingPluginChannel(instance);
 
         if (scoreboardTask != null && !scoreboardTask.isCancelled()) scoreboardTask.cancel();
+        if (tablistTask != null && !tablistTask.isCancelled()) tablistTask.cancel();
         playerTestScoreboard.clear();
+        playerTablistUtil.clear();
     }
 
     public void enable() {
@@ -71,6 +74,10 @@ public class Main {
         scoreboardTask = instance.getServer().getScheduler().runTaskTimer(instance, () -> {
             for (Player player : instance.getServer().getOnlinePlayers())
                 playerTestScoreboard.computeIfAbsent(player, user -> new TestScoreboard(user, this)).run();
+        }, 0L, 1L);
+        tablistTask = instance.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> {
+            for (Player player : instance.getServer().getOnlinePlayers())
+                playerTablistUtil.computeIfAbsent(player, user -> new TablistUtil(player, this)).setScoreboardTabList();
         }, 0L, 1L);
     }
 
@@ -92,10 +99,6 @@ public class Main {
 
     public Message getMessage() {
         return message;
-    }
-
-    public SchedulerTask getSchedulerTask() {
-        return schedulerTask;
     }
 
     public Cooldown getCooldown() {

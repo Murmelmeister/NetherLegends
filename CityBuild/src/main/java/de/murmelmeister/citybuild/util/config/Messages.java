@@ -1,7 +1,6 @@
 package de.murmelmeister.citybuild.util.config;
 
 public enum Messages {
-
     PREFIX("Prefix", "&5Necronic &8» &r"),
     NO_PERMISSION("NoPermission", "&cYou don't have the permission to do that."),
     NO_CONSOLE("NoConsole", "&cThis command does not work in the console."),
@@ -36,13 +35,6 @@ public enum Messages {
     COMMAND_GOD_MODE_USE_OFF("Command.GodMode.Use.Off", "&7You were put out of&c god mode&7."),
     COMMAND_GOD_MODE_OTHER_ON("Command.GodMode.Other.On", "&7The player&e [PLAYER]&7 has been put into&a god mode&7."),
     COMMAND_GOD_MODE_OTHER_OFF("Command.GodMode.Other.Off", "&7The player&e [PLAYER]&7 were put out of&c god mode&7."),
-    COMMAND_RANK_GET("Command.Rank.Get", "&7Rank: &d[NAME] \n[PREFIX]&7ChatPrefix: &d[CHAT_PREFIX] \n[PREFIX]&7ChatSuffix: &d[CHAT_SUFFIX] \n[PREFIX]&7ChatColor: &d[CHAT_COLOR] \n[PREFIX]&7TabPrefix: &d[TAB_PREFIX] \n[PREFIX]&7TabSuffix: &d[TAB_SUFFIX] \n[PREFIX]&7TabColor: &d[TAB_COLOR] \n[PREFIX]&7TabID: &d[TAB_ID] \n[PREFIX]&7TeamID: &d[TEAM_ID] \n[PREFIX]&7Scoreboard: &d[SCOREBOARD] \n[PREFIX]&7Permission: &d[PERMISSION]"),
-    COMMAND_RANK_ADD("Command.Rank.Add", "&7You have added&a [NAME]&7."),
-    COMMAND_RANK_REMOVE("Command.Rank.Remove", "&7You have deleted&a [NAME]&7."),
-    COMMAND_RANK_SET("Command.Rank.Set", "&7You have edited&a [NAME]&7."),
-    COMMAND_RANK_USAGE("Command.Rank.Usage", "&7Syntax: &c/rank add <name> <chatPrefix> <chatSuffix> <chatColor> <tabPrefix> <tabSuffix> <tabColor> <tabID>"),
-    COMMAND_RANK_NOT_EXIST("Command.Rank.NotExist", "&7This rank&c [NAME]&7 does not exist."),
-    COMMAND_RANK_EXIST("Command.Rank.Exist", "&cThis rank&e [NAME]&c does exist. &cPlease delete this rank."),
     COMMAND_LOBBY_SEND("Command.Lobby.Send", "&7Connect to Lobby-1..."),
     COMMAND_LIVE_ON("Command.Live.On", "&7You have been put into&a live mode&7."),
     COMMAND_LIVE_OFF("Command.Live.Off", "&7You were put out of&c live mode&7."),
