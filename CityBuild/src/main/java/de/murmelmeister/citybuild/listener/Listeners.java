@@ -25,7 +25,6 @@ public class Listeners implements Listener {
     public final Homes homes;
     public final Economy economy;
     public final ItemValue itemValue;
-    public final Settings settings;
     public final EnderChest enderChest;
 
     public Listeners(Main main) {
@@ -40,7 +39,6 @@ public class Listeners implements Listener {
         this.homes = main.getHomes();
         this.economy = main.getEconomy();
         this.itemValue = main.getItemValue();
-        this.settings = main.getSettings();
         this.enderChest = main.getEnderChest();
     }
 

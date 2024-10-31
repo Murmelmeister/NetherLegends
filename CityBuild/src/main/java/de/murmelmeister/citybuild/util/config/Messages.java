@@ -110,7 +110,6 @@ public enum Messages {
     SCOREBOARD_SCORE_2("Scoreboard.Score.2", "&8» &dNecronic.net"),
     SCOREBOARD_SCORE_1("Scoreboard.Score.1", "&8&m-----&r &7v0.0.1 &8&m-----"),
     SCOREBOARD_SCORE_0("Scoreboard.Score.0", "Test 0"),
-    SETTINGS_DISABLE_SCOREBOARD("Settings.Disable.Scoreboard", "&cPlease rejoin the server to disable/enable the scoreboard for you."),
     ENDER_CHEST_MENU_USE("EnderChest.Menu.Use", "&5EnderChest - Menu"),
     ENDER_CHEST_MENU_OTHER("EnderChest.Menu.Other", "&5EnderChest - Menu - [PLAYER]"),
     ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", "&aSlot [SLOT]"),

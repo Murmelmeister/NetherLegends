@@ -27,7 +27,6 @@ public class Main {
     private final Homes homes;
     private final Economy economy;
     private final ItemValue itemValue;
-    private final Settings settings;
     private final EnderChest enderChest;
 
     private final Listeners listeners;
@@ -48,7 +47,6 @@ public class Main {
         this.homes = new Homes(this);
         this.economy = new Economy(this);
         this.itemValue = new ItemValue(this);
-        this.settings = new Settings(this);
         this.enderChest = new EnderChest(this);
         this.listeners = new Listeners(this);
         this.commands = new Commands(this);
@@ -118,10 +116,6 @@ public class Main {
 
     public ItemValue getItemValue() {
         return itemValue;
-    }
-
-    public Settings getSettings() {
-        return settings;
     }
 
     public EnderChest getEnderChest() {

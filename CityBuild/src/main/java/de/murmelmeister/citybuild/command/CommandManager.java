@@ -32,7 +32,6 @@ public abstract class CommandManager extends Commands implements TabExecutor {
     public final Homes homes;
     public final Economy economy;
     public final ItemValue itemValue;
-    public final Settings settings;
     public final EnderChest enderChest;
     public final DecimalFormat decimalFormat;
 
@@ -48,7 +47,6 @@ public abstract class CommandManager extends Commands implements TabExecutor {
         this.homes = main.getHomes();
         this.economy = main.getEconomy();
         this.itemValue = main.getItemValue();
-        this.settings = main.getSettings();
         this.enderChest = main.getEnderChest();
         this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
     }
