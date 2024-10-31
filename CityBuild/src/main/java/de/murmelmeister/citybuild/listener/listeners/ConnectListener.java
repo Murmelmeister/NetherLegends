@@ -67,7 +67,7 @@ public class ConnectListener extends Listeners {
             if (settings.getBoolean(player.getUniqueId(), "Settings.Scoreboard")) {
                 this.scoreboard = new TestScoreboard(player, main);
                 scoreboard.start();
-            }*&
+            }*/
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_MESSAGE))
             player.sendMessage(HexColor.format(message.getString(Messages.EVENT_JOIN_MESSAGE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_TITLE))
