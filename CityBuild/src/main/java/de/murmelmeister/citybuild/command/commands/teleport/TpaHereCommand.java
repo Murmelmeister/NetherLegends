@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.teleport;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TpaHereCommand extends CommandManager {
-    public TpaHereCommand(Main main) {
-        super(main);
+    public TpaHereCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

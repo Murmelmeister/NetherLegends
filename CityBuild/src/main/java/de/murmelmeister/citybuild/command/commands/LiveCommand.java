@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LiveCommand extends CommandManager {
-    public LiveCommand(Main main) {
-        super(main);
+    public LiveCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

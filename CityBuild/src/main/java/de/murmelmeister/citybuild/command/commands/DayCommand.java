@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DayCommand extends CommandManager {
-    public DayCommand(Main main) {
-        super(main);
+    public DayCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -36,14 +36,14 @@ public class DayCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "Day") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "Day");
+            cooldown.remove(player.getUniqueId(), "Day");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "Day")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "Day").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "Day")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "Day").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Day", config.getLong(Configs.TIME_DAY_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Day", config.getLong(Configs.TIME_DAY_COOLDOWN));
         player.getWorld().setTime(config.getLong(Configs.TIME_DAY_TIME));
         sendMessage(player, message.getString(Messages.COMMAND_DAY));
         return true;

@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.util.scoreboard;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -14,11 +14,11 @@ public abstract class ScoreboardBuilder implements Runnable {
     private final Objective objective;
 
     protected final Player player;
-    protected final Main main;
+    protected final CityBuild plugin;
 
-    public ScoreboardBuilder(Player player, Main main) {
+    public ScoreboardBuilder(Player player, CityBuild plugin) {
         this.player = player;
-        this.main = main;
+        this.plugin = plugin;
         if (player.getScoreboard().equals(Bukkit.getScoreboardManager().getMainScoreboard()))
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 

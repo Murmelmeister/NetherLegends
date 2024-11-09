@@ -4,9 +4,9 @@ import org.bukkit.Material;
 
 public enum Configs {
     PREFIX_ENABLE("Prefix.Enable", true),
-    FILE_NAME("FileName", "CityBuild"),
     CURRENT_SERVER("CurrentServer", "CityBuild"),
-    PATTERN_CONFIG("Pattern.Config", "yyyy-MM-dd HH:mm:ss.SSS"),
+    DATE_FORMAT_PATTERN("Date.Format.Pattern", "yyyy-MM-dd HH:mm:ss"),
+    DATE_FORMAT_LOCALE("Date.Format.Locale", "GERMAN"),
     PATTERN_DECIMAL("Pattern.Decimal", "###,###,###.##"),
     PATTERN_COMMAND_SIGN("Pattern.Command.Sign", "yyyy-MM-dd HH:mm"),
     PERMISSION_ENDER_CHEST_COMMAND("Permission.EnderChest.Command", "citybuild.command.enderchest.command"),
@@ -187,6 +187,7 @@ public enum Configs {
     MATERIAL_CASE("Material.Case", false),
     ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", Material.LIME_STAINED_GLASS_PANE.toString()),
     ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", Material.RED_STAINED_GLASS_PANE.toString());
+    public static final Configs[] VALUES = values();
 
     private final String path;
     private final Object value;

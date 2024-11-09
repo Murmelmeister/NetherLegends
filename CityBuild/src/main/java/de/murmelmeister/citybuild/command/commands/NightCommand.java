@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -15,8 +15,8 @@ import java.util.List;
 
 
 public class NightCommand extends CommandManager {
-    public NightCommand(Main main) {
-        super(main);
+    public NightCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -37,14 +37,14 @@ public class NightCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "Night") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "Night");
+            cooldown.remove(player.getUniqueId(), "Night");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "Night")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "Night").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "Night")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "Night").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Night", config.getLong(Configs.TIME_NIGHT_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Night", config.getLong(Configs.TIME_NIGHT_COOLDOWN));
         player.getWorld().setTime(config.getLong(Configs.TIME_NIGHT_TIME));
         sendMessage(player, message.getString(Messages.COMMAND_NIGHT));
         return true;

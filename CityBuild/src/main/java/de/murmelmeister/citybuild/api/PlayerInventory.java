@@ -19,12 +19,16 @@ public class PlayerInventory {
     private File file;
     private YamlConfiguration config;
 
-    public PlayerInventory(Logger logger) {
+    public PlayerInventory(final Logger logger) {
         this.logger = logger;
     }
 
+    public void reloadFile(UUID uuid) {
+        createFile(uuid);
+    }
+
     private void createFile(UUID uuid) {
-        this.file = FileUtil.createFile(logger, "./plugins/" + CityBuild.class.getSimpleName() + "/Inventories/", uuid.toString() + ".yml");
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath() + "/Inventories/", uuid.toString() + ".yml");
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 

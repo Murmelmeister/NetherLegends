@@ -1,10 +1,9 @@
 package de.murmelmeister.citybuild.command.commands.economy;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
-import de.murmelmeister.murmelapi.MurmelAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PayCommand extends CommandManager {
-    public PayCommand(Main main) {
-        super(main);
+    public PayCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

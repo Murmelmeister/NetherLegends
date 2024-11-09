@@ -1,9 +1,7 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.util.FileUtil;
-import de.murmelmeister.citybuild.util.config.Configs;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -18,25 +16,26 @@ import java.util.List;
 public class Locations {
     private final Logger logger;
     private final Server server;
-    private final Config defaultConfig;
 
     private File file;
     private YamlConfiguration config;
     private List<String> locationList;
 
-    public Locations(Main main) {
-        this.logger = main.getLogger();
-        this.server = main.getInstance().getServer();
-        this.defaultConfig = main.getConfig();
+    public Locations(final Logger logger, final Server server) {
+        this.logger = logger;
+        this.server = server;
     }
 
-    public void create() {
-        String fileName = "locations.yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
+    public void reloadFile() {
+        create();
+    }
+
+    private void create() {
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath(), "locations.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void save() {
+    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {
@@ -153,6 +152,7 @@ public class Locations {
 
     public List<String> getLocationList() {
         this.locationList = new ArrayList<>();
+        create();
         if (config.contains("LocationList")) locationList = config.getStringList("LocationList");
         return locationList;
     }

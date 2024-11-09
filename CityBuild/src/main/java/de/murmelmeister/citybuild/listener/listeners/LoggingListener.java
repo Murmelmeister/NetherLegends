@@ -1,7 +1,7 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -14,12 +14,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.slf4j.Logger;
 
-public class LoggingListener extends Listeners {
+public class LoggingListener extends ListenerManager {
     private final Logger logger;
 
-    public LoggingListener(Main main) {
-        super(main);
-        this.logger = main.getLogger();
+    public LoggingListener(CityBuild plugin) {
+        super(plugin);
+        this.logger = plugin.getSLF4JLogger();
     }
 
     @EventHandler

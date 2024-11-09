@@ -8,7 +8,6 @@ import org.bukkit.World;
 import java.util.List;
 
 public class Homes {
-
     public Homes() {
         String tableName = "CB_Home";
         createTable(tableName);

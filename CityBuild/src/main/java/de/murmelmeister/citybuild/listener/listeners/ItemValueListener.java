@@ -1,7 +1,7 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -9,9 +9,9 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemValueListener extends Listeners {
-    public ItemValueListener(Main main) {
-        super(main);
+public class ItemValueListener extends ListenerManager {
+    public ItemValueListener(CityBuild plugin) {
+        super(plugin);
     }
 
     @EventHandler

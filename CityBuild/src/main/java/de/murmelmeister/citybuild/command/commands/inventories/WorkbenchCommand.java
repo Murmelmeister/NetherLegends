@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.inventories;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import org.bukkit.command.Command;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkbenchCommand extends CommandManager {
-    public WorkbenchCommand(Main main) {
-        super(main);
+    public WorkbenchCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

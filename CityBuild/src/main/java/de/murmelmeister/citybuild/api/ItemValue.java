@@ -1,7 +1,7 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class ItemValue {
     private final Logger logger;
-    private final Config defaultConfig;
+    private final ConfigFile defaultConfig;
     private final Economy economy;
     private final User user;
 
@@ -30,33 +30,33 @@ public class ItemValue {
     private YamlConfiguration config;
     private List<String> items;
 
-    public ItemValue(Main main) {
-        this.logger = main.getLogger();
-        this.defaultConfig = main.getConfig();
-        this.economy = main.getEconomy();
-        this.user = main.getUser();
-    }
-
-    public void register() {
-        create();
+    public ItemValue(final Logger logger, final ConfigFile configFile, final Economy economy, final User user) {
+        this.logger = logger;
+        this.defaultConfig = configFile;
+        this.economy = economy;
+        this.user = user;
         load();
-        save();
     }
 
-    public void create() {
-        String fileName = "itemValue.yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//Economy//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
+    public void reloadFile() {
+        create();
+    }
+
+    private void create() {
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath() + "/Economy/", "itemValue.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void load() {
+    private void load() {
+        create();
         for (Material material : Material.values()) {
             if (get(material.name() + ".Value") == null) setValue(material, defaultSellPrice());
             if (get(material.name() + ".ID") == null) set(material.name() + ".ID", UUID.randomUUID().toString());
         }
+        save();
     }
 
-    public void save() {
+    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {

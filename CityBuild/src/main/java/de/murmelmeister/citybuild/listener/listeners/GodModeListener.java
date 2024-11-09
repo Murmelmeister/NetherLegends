@@ -1,15 +1,15 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
-public class GodModeListener extends Listeners {
-    public GodModeListener(Main main) {
-        super(main);
+public class GodModeListener extends ListenerManager {
+    public GodModeListener(CityBuild plugin) {
+        super(plugin);
     }
 
     @EventHandler

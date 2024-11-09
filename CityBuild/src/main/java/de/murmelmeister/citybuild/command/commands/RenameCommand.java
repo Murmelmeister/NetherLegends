@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RenameCommand extends CommandManager {
-    public RenameCommand(Main main) {
-        super(main);
+    public RenameCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -53,14 +53,14 @@ public class RenameCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "Rename") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "Rename");
+            cooldown.remove(player.getUniqueId(), "Rename");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "Rename")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "Rename").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "Rename")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "Rename").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Rename", config.getLong(Configs.TIME_RENAME_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Rename", config.getLong(Configs.TIME_RENAME_COOLDOWN));
         createItem(player.getItemInHand(), messages);
         return true;
     }

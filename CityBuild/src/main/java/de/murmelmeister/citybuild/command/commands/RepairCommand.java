@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepairCommand extends CommandManager {
-    public RepairCommand(Main main) {
-        super(main);
+    public RepairCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -40,14 +40,14 @@ public class RepairCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "Repair") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "Repair");
+            cooldown.remove(player.getUniqueId(), "Repair");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "Repair")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "Repair").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "Repair")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "Repair").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Repair", config.getLong(Configs.TIME_REPAIR_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Repair", config.getLong(Configs.TIME_REPAIR_COOLDOWN));
         createItem(player.getItemInHand());
         return true;
     }

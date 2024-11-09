@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -18,8 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class SignCommand extends CommandManager {
-    public SignCommand(Main main) {
-        super(main);
+    public SignCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -48,14 +48,14 @@ public class SignCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "Sign") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "Sign");
+            cooldown.remove(player.getUniqueId(), "Sign");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "Sign")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "Sign").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "Sign")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "Sign").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Sign", config.getLong(Configs.TIME_SIGN_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Sign", config.getLong(Configs.TIME_SIGN_COOLDOWN));
         createItem(player, messages);
         return true;
     }

@@ -1,4 +1,4 @@
-package de.murmelmeister.citybuild.configs;
+package de.murmelmeister.citybuild.files;
 
 import de.murmelmeister.murmelapi.utils.Database;
 import de.murmelmeister.murmelapi.utils.FileUtil;

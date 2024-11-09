@@ -105,8 +105,8 @@ public enum Messages {
     ENDER_CHEST_MENU_USE("EnderChest.Menu.Use", "&5EnderChest - Menu"),
     ENDER_CHEST_MENU_OTHER("EnderChest.Menu.Other", "&5EnderChest - Menu - [PLAYER]"),
     ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", "&aSlot [SLOT]"),
-    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", "&cNot unlocked"),
-    ;
+    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", "&cNot unlocked");
+    public static final Messages[] VALUES = values();
 
     private final String path;
     private final String value;

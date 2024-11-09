@@ -1,7 +1,7 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -10,9 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class ConnectListener extends Listeners {
-    public ConnectListener(Main main) {
-        super(main);
+public class ConnectListener extends ListenerManager {
+    public ConnectListener(CityBuild plugin) {
+        super(plugin);
     }
 
     @SuppressWarnings("deprecation")
@@ -35,7 +35,6 @@ public class ConnectListener extends Listeners {
         } else
             sendMessage(player, message.getString(Messages.EVENT_SPAWN_NOT_EXIST).replace("[PREFIX]", message.prefix()));
 
-        cooldown.setUsername(player.getUniqueId(), player.getName());
         int userId = user.getId(player.getUniqueId());
         if (user.existsUser(player.getUniqueId())) {
             economy.createUser(userId);

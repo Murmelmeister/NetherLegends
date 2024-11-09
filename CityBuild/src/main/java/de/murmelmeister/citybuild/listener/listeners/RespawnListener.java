@@ -1,15 +1,15 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class RespawnListener extends Listeners {
-    public RespawnListener(Main main) {
-        super(main);
+public class RespawnListener extends ListenerManager {
+    public RespawnListener(CityBuild plugin) {
+        super(plugin);
     }
 
     @EventHandler
@@ -22,6 +22,6 @@ public class RespawnListener extends Listeners {
                 player.spigot().respawn();
                 if (locations.isSpawnExist()) player.teleport(locations.getSpawn());
             }
-        }.runTaskLater(instance, 2L);
+        }.runTaskLater(plugin, 2L);
     }
 }

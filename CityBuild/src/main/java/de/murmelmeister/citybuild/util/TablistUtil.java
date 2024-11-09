@@ -1,8 +1,8 @@
 package de.murmelmeister.citybuild.util;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
-import de.murmelmeister.citybuild.configs.Message;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.files.ConfigFile;
+import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.Server;
@@ -10,16 +10,16 @@ import org.bukkit.entity.Player;
 
 public class TablistUtil {
     private final Player player;
-    private final Main main;
+    private final CityBuild plugin;
 
-    public TablistUtil(Player player, Main main) {
+    public TablistUtil(final Player player, final CityBuild plugin) {
         this.player = player;
-        this.main = main;
+        this.plugin = plugin;
     }
 
     public void setScoreboardTabList() {
-        final Config config = main.getConfig();
-        final Message message = main.getMessage();
+        final ConfigFile config = plugin.getConfigFile();
+        final MessageFile message = plugin.getMessageFile();
         final Server server = player.getServer();
         player.setPlayerListHeaderFooter(HexColor.format(message.getString(Messages.SCOREBOARD_TAB_LIST_HEADER)
                         .replace("[CURRENT_PLAYERS]", String.valueOf(server.getOnlinePlayers().size()))

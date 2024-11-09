@@ -1,7 +1,7 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.OfflinePlayer;
@@ -12,9 +12,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class EnderChestListener extends Listeners {
-    public EnderChestListener(Main main) {
-        super(main);
+public class EnderChestListener extends ListenerManager {
+    public EnderChestListener(CityBuild plugin) {
+        super(plugin);
     }
 
     @EventHandler

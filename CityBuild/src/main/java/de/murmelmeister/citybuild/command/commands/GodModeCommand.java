@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class GodModeCommand extends CommandManager {
-    public GodModeCommand(Main main) {
-        super(main);
+    public GodModeCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

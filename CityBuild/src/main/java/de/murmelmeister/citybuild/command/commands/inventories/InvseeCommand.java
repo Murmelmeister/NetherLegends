@@ -1,9 +1,8 @@
 package de.murmelmeister.citybuild.command.commands.inventories;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.nbt.NbtCompound;
 import de.murmelmeister.citybuild.api.nbt.NbtTagFloat;
-import de.murmelmeister.citybuild.api.nbt.NbtTagInt;
 import de.murmelmeister.citybuild.api.nbt.NbtTagString;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -19,8 +18,8 @@ import java.io.*;
 import java.util.*;
 
 public class InvseeCommand extends CommandManager {
-    public InvseeCommand(Main main) {
-        super(main);
+    public InvseeCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     @Override

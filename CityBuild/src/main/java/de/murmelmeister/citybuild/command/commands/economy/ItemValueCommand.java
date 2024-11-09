@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.economy;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ItemValueCommand extends CommandManager {
-    public ItemValueCommand(Main main) {
-        super(main);
+    public ItemValueCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     @Override

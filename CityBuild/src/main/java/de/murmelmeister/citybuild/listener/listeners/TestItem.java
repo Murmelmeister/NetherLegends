@@ -1,8 +1,8 @@
 package de.murmelmeister.citybuild.listener.listeners;
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.listener.Listeners;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.listener.ListenerManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,11 +11,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class TestItem extends Listeners {
+public class TestItem extends ListenerManager {
     public int testPoints = 0;
 
-    public TestItem(Main main) {
-        super(main);
+    public TestItem(CityBuild plugin) {
+        super(plugin);
     }
 
     @EventHandler
@@ -27,7 +27,7 @@ public class TestItem extends Listeners {
         player.getOpenInventory().setItem(22, createItem(Material.IRON_LEGGINGS, "Test-3"));
         player.getOpenInventory().setItem(23, createItem(Material.IRON_BOOTS, "Test-4"));
 
-        player.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> player.sendActionBar("TP: " + testPoints), 20L, 20L);
+        player.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> player.sendActionBar("TP: " + testPoints), 20L, 20L);
     }
 
     @EventHandler

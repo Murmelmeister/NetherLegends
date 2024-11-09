@@ -1,12 +1,13 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyCommand extends CommandManager {
-    public LobbyCommand(Main main) {
-        super(main);
+    private final Plugin plugin;
+    public LobbyCommand(CityBuild plugin) {
+        super(plugin);
+        this.plugin = plugin;
     }
 
     /*
@@ -43,7 +46,7 @@ public class LobbyCommand extends CommandManager {
         }
 
         sendMessage(player, message.getString(Messages.COMMAND_LOBBY_SEND));
-        player.sendPluginMessage(instance, "BungeeCord", b.toByteArray());
+        player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
         return true;
     }
 

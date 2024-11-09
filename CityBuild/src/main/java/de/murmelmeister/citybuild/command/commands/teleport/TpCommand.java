@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.teleport;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class TpCommand extends CommandManager {
-    public TpCommand(Main main) {
-        super(main);
+    public TpCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

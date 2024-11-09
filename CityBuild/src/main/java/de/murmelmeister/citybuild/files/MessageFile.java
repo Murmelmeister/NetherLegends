@@ -1,9 +1,8 @@
-package de.murmelmeister.citybuild.configs;
+package de.murmelmeister.citybuild.files;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.HexColor;
-import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
@@ -11,36 +10,33 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class Message {
+public class MessageFile {
     private final Logger logger;
-    private final Config defaultConfig;
-
     private File file;
     private YamlConfiguration config;
 
-    public Message(Main main) {
-        this.logger = main.getLogger();
-        this.defaultConfig = main.getConfig();
-    }
-
-    public void register() {
-        create();
+    public MessageFile(final Logger logger) {
+        this.logger = logger;
         load();
-        save();
     }
 
-    public void create() {
-        String fileName = "message.yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
+    public void reloadFile() {
+        create();
+    }
+
+    private void create() {
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath(), "message.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void load() {
-        for (Messages messages : Messages.values())
+    private void load() {
+        create();
+        for (Messages messages : Messages.VALUES)
             if (getString(messages) == null) set(messages);
+        save();
     }
 
-    public void save() {
+    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {
@@ -48,7 +44,7 @@ public class Message {
         }
     }
 
-    public void set(Messages messages) {
+    private void set(Messages messages) {
         config.set(messages.getPath(), messages.getValue());
     }
 

@@ -1,6 +1,6 @@
-package de.murmelmeister.citybuild.configs;
+package de.murmelmeister.citybuild.files;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,34 +9,33 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-public class Config {
+public class ConfigFile {
     private final Logger logger;
-
     private File file;
     private YamlConfiguration config;
 
-    public Config(Main main) {
-        this.logger = main.getLogger();
-    }
-
-    public void register() {
-        create();
+    public ConfigFile(final Logger logger) {
+        this.logger = logger;
         load();
-        save();
     }
 
-    public void create() {
-        String fileName = "config.yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//", Configs.FILE_NAME.getValue()), fileName);
+    public void reloadFile() {
+        create();
+    }
+
+    private void create() {
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath(), "config.yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 
-    public void load() {
-        for (Configs configs : Configs.values())
+    private void load() {
+        create();
+        for (Configs configs : Configs.VALUES)
             if (get(configs) == null) set(configs);
+        save();
     }
 
-    public void save() {
+    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {
@@ -44,11 +43,11 @@ public class Config {
         }
     }
 
-    public void set(Configs configs) {
+    private void set(Configs configs) {
         config.set(configs.getPath(), configs.getValue());
     }
 
-    public Object get(Configs configs) {
+    private Object get(Configs configs) {
         return config.get(configs.getPath());
     }
 

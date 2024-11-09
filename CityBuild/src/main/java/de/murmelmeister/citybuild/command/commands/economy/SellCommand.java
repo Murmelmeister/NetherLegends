@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.economy;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SellCommand extends CommandManager {
-    public SellCommand(Main main) {
-        super(main);
+    public SellCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     @Override

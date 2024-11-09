@@ -1,9 +1,9 @@
 package de.murmelmeister.citybuild.util.scoreboard;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.Economy;
-import de.murmelmeister.citybuild.configs.Config;
-import de.murmelmeister.citybuild.configs.Message;
+import de.murmelmeister.citybuild.files.ConfigFile;
+import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import java.text.DecimalFormat;
 
 public class TestScoreboard extends ScoreboardBuilder {
-    public TestScoreboard(Player player, Main main) {
-        super(player, main);
+    public TestScoreboard(Player player, CityBuild plugin) {
+        super(player, plugin);
     }
 
     @Override
@@ -28,11 +28,11 @@ public class TestScoreboard extends ScoreboardBuilder {
     }
 
     private void setScoreboard() {
-        final Config config = main.getConfig();
-        final Message message = main.getMessage();
-        final Economy economy = main.getEconomy();
+        final ConfigFile config = plugin.getConfigFile();
+        final MessageFile message = plugin.getMessageFile();
+        final Economy economy = plugin.getEconomy();
         final DecimalFormat decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
-        final User user = main.getUser();
+        final User user = plugin.getUser();
         final int userId = user.getId(player.getUniqueId());
         setDisplayName(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_DISPLAY_NAME)));
 

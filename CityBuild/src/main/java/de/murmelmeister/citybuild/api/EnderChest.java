@@ -1,8 +1,8 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
-import de.murmelmeister.citybuild.configs.Message;
+import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.files.ConfigFile;
+import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -23,8 +23,8 @@ import java.util.UUID;
 
 public class EnderChest extends PlayerInventoryLoader {
     private final Logger logger;
-    private final Config defaultConfig;
-    private final Message message;
+    private final ConfigFile defaultConfig;
+    private final MessageFile message;
     private Player target; // TODO: removed
     private OfflinePlayer offlineTarget; // TODO: removed
     private List<UUID> uuids;
@@ -34,16 +34,15 @@ public class EnderChest extends PlayerInventoryLoader {
 
     private File file;
 
-    public EnderChest(Main main) {
-        this.logger = main.getLogger();
-        this.defaultConfig = main.getConfig();
-        this.message = main.getMessage();
+    public EnderChest(final Logger logger, final ConfigFile configFile, final MessageFile messageFile) {
+        this.logger = logger;
+        this.defaultConfig = configFile;
+        this.message = messageFile;
     }
 
     @Override
     public void create(UUID uuid) {
-        String fileName = uuid + ".yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//EnderChest//UserData//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
+        this.file = FileUtil.createFile(logger, CityBuild.getMainPath() + "/EnderChest/UserData/", uuid.toString() + ".yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

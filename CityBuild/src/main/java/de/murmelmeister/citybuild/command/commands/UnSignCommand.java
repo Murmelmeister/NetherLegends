@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnSignCommand extends CommandManager {
-    public UnSignCommand(Main main) {
-        super(main);
+    public UnSignCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
@@ -40,14 +40,14 @@ public class UnSignCommand extends CommandManager {
         }
 
         if (cooldown.getDuration(player.getUniqueId(), "UnSign") <= System.currentTimeMillis())
-            cooldown.removeCooldown(player.getUniqueId(), "UnSign");
+            cooldown.remove(player.getUniqueId(), "UnSign");
 
-        if (cooldown.hasCooldown(player.getUniqueId(), "UnSign")) {
-            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getExpired(player.getUniqueId(), "UnSign").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
+        if (cooldown.has(player.getUniqueId(), "UnSign")) {
+            sendMessage(player, message.getString(Messages.COOLDOWN_MESSAGE).replace("[DATE]", cooldown.getDurationDate(config, player.getUniqueId(), "UnSign").replace(" ", message.getString(Messages.COOLDOWN_DATE))));
             return true;
         }
 
-        cooldown.addCooldown(player.getUniqueId(), "Sign", config.getLong(Configs.TIME_UN_SIGN_COOLDOWN));
+        cooldown.add(player.getUniqueId(), "Sign", config.getLong(Configs.TIME_UN_SIGN_COOLDOWN));
         createItem(player.getItemInHand());
         return true;
     }

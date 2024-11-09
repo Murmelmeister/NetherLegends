@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.inventories;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrashCommand extends CommandManager {
-    public TrashCommand(Main main) {
-        super(main);
+    public TrashCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

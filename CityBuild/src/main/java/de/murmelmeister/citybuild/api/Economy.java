@@ -3,7 +3,6 @@ package de.murmelmeister.citybuild.api;
 import de.murmelmeister.murmelapi.utils.Database;
 
 public class Economy {
-
     public Economy() {
         String tableName = "CB_Economy";
         createTable(tableName);

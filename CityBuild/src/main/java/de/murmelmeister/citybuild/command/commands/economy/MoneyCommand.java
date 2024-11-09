@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.economy;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class MoneyCommand extends CommandManager {
-    public MoneyCommand(Main main) {
-        super(main);
+    public MoneyCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*

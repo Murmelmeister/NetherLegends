@@ -1,6 +1,6 @@
 package de.murmelmeister.citybuild.command.commands.locations;
 
-import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class WarpCommand extends CommandManager {
-    public WarpCommand(Main main) {
-        super(main);
+    public WarpCommand(CityBuild plugin) {
+        super(plugin);
     }
 
     /*
