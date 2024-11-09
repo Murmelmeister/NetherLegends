@@ -34,12 +34,7 @@ public class AddHomeCommand extends CommandManager {
             return true;
         }
 
-        int userId = user.getId(player.getUniqueId());
-
-        if (userId == -2) {
-            logger.error("{} has no ID in the database", player.getName());
-            return true;
-        }
+        int userId = user.createOrGetUser(player.getUniqueId());
 
         String homeName = args[0];
         if (homes.hasHome(userId, homeName)) {

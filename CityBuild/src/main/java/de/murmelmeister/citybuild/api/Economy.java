@@ -2,7 +2,11 @@ package de.murmelmeister.citybuild.api;
 
 import de.murmelmeister.murmelapi.utils.Database;
 
+import java.util.regex.Pattern;
+
 public class Economy {
+    public static final Pattern MONEY_PATTERN = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
+
     public Economy() {
         String tableName = "CB_Economy";
         createTable(tableName);
@@ -43,28 +47,24 @@ public class Economy {
     }
 
     public void addMoney(int userId, double amount) {
-        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
         double current = getMoney(userId);
         current += amount;
         setMoney(userId, current);
     }
 
     public void addBankMoney(int userId, double amount) {
-        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
         double current = getBankMoney(userId);
         current += amount;
         setBankMoney(userId, current);
     }
 
     public void removeMoney(int userId, double amount) {
-        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
         double current = getMoney(userId);
         current -= amount;
         setMoney(userId, current);
     }
 
     public void removeBankMoney(int userId, double amount) {
-        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
         double current = getBankMoney(userId);
         current -= amount;
         setBankMoney(userId, current);
@@ -79,12 +79,10 @@ public class Economy {
     }
 
     public boolean hasEnoughMoney(int userId, double money) {
-        if (money < 0) throw new IllegalArgumentException("Money cannot be negative");
         return money <= getMoney(userId);
     }
 
     public boolean hasEnoughBankMoney(int userId, double money) {
-        if (money < 0) throw new IllegalArgumentException("Money cannot be negative");
         return money <= getBankMoney(userId);
     }
 

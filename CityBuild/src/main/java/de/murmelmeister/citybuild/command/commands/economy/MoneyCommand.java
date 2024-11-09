@@ -29,13 +29,7 @@ public class MoneyCommand extends CommandManager {
         Player player = getPlayer(sender);
         if (!(existPlayer(sender))) return true;
 
-
-        int userId = user.getId(player.getUniqueId());
-
-        if (userId == -2) {
-            logger.error("{} has no ID in the database", player.getName());
-            return true;
-        }
+        int userId = user.createOrGetUser(player.getUniqueId());
 
         if (args.length == 0) {
             if (!(isEnable(sender, Configs.COMMAND_ENABLE_MONEY_USE))) return true;

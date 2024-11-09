@@ -1,6 +1,7 @@
 package de.murmelmeister.citybuild.command.commands.economy;
 
 import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.api.Economy;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
@@ -78,18 +79,20 @@ public class ItemValueCommand extends CommandManager {
             return;
         }
         Material material = Material.valueOf(materialName);
+        String amount = args[2];
 
-        try {
-            BigDecimal price = new BigDecimal(args[2]);
-            itemValue.setValue(material, price);
-            if (config.getBoolean(Configs.MATERIAL_CASE))
-                sendMessage(sender, message.getString(Messages.COMMAND_ITEM_VALUE_SET).replace("[ITEM]", material.name().toLowerCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(material)))
-                        .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-            else
-                sendMessage(sender, message.getString(Messages.COMMAND_ITEM_VALUE_SET).replace("[ITEM]", material.name().toUpperCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(material)))
-                        .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-        } catch (NumberFormatException exception) {
-            sendMessage(sender, message.getString(Messages.NO_NUMBER));
+        if (!Economy.MONEY_PATTERN.matcher(amount).matches()) {
+            sendMessage(sender, message.getString(Messages.INVALID_NUMBERS));
+            return;
         }
+
+        BigDecimal price = new BigDecimal(amount);
+        itemValue.setValue(material, price);
+        if (config.getBoolean(Configs.MATERIAL_CASE))
+            sendMessage(sender, message.getString(Messages.COMMAND_ITEM_VALUE_SET).replace("[ITEM]", material.name().toLowerCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(material)))
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
+        else
+            sendMessage(sender, message.getString(Messages.COMMAND_ITEM_VALUE_SET).replace("[ITEM]", material.name().toUpperCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(material)))
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
     }
 }

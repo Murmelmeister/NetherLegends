@@ -2,7 +2,7 @@ package de.murmelmeister.citybuild.util;
 
 import java.util.*;
 
-public class ListUtil {
+public final class ListUtil {
     private final Set<UUID> godMode;
     private final Set<UUID> live;
     private final Map<UUID, UUID> tpa;

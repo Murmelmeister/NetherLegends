@@ -33,12 +33,7 @@ public class RemoveHomeCommand extends CommandManager {
             return true;
         }
 
-        int userId = user.getId(player.getUniqueId());
-
-        if (userId == -2) {
-            logger.error("{} has no ID in the database", player.getName());
-            return true;
-        }
+        int userId = user.createOrGetUser(player.getUniqueId());
 
         String homeName = args[0];
         if (!(homes.hasHome(userId, homeName))) {
@@ -54,7 +49,7 @@ public class RemoveHomeCommand extends CommandManager {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         Player player = getPlayer(sender);
-        int userId = user.getId(player.getUniqueId());
+        int userId = user.createOrGetUser(player.getUniqueId());
         return tabComplete(homes.getHomes(userId), args, 1);
     }
 }

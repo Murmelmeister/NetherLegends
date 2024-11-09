@@ -8,7 +8,7 @@ import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-public class TablistUtil {
+public final class TablistUtil {
     private final Player player;
     private final CityBuild plugin;
 

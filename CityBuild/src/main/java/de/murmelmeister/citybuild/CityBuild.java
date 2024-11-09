@@ -75,11 +75,11 @@ public final class CityBuild extends JavaPlugin {
         scoreboardTask = this.getServer().getScheduler().runTaskTimer(this, () -> {
             for (Player player : this.getServer().getOnlinePlayers())
                 playerTestScoreboard.computeIfAbsent(player, user -> new TestScoreboard(user, this)).run();
-        }, 0L, 20L);
+        }, 0L, 2 * 20L);
         tablistTask = this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             for (Player player : this.getServer().getOnlinePlayers())
                 playerTablistUtil.computeIfAbsent(player, user -> new TablistUtil(player, this)).setScoreboardTabList();
-        }, 0L, 20L);
+        }, 0L, 2 * 20L);
     }
 
     public static CityBuild getInstance() {
