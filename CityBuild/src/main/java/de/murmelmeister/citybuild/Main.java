@@ -4,10 +4,13 @@ import de.murmelmeister.citybuild.api.*;
 import de.murmelmeister.citybuild.command.Commands;
 import de.murmelmeister.citybuild.configs.Config;
 import de.murmelmeister.citybuild.configs.Message;
+import de.murmelmeister.citybuild.configs.MySQL;
 import de.murmelmeister.citybuild.listener.Listeners;
 import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.TablistUtil;
 import de.murmelmeister.citybuild.util.scoreboard.TestScoreboard;
+import de.murmelmeister.murmelapi.MurmelAPI;
+import de.murmelmeister.murmelapi.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.slf4j.Logger;
@@ -19,6 +22,7 @@ public class Main {
     private final CityBuild instance;
     private final Logger logger;
     private final ListUtil listUtil;
+    private final MySQL mySQL;
 
     private final Config config;
     private final Message message;
@@ -28,6 +32,7 @@ public class Main {
     private final Economy economy;
     private final ItemValue itemValue;
     private final EnderChest enderChest;
+    private final PlayerInventory playerInventory;
 
     private final Listeners listeners;
     private final Commands commands;
@@ -40,17 +45,21 @@ public class Main {
     public Main(CityBuild instance) {
         this.instance = instance;
         this.logger = instance.getSLF4JLogger();
+        this.playerInventory = new PlayerInventory(logger);
         this.listUtil = new ListUtil();
+        this.mySQL = new MySQL(logger);
+        mySQL.connect();
         this.config = new Config(this);
         this.message = new Message(this);
         this.cooldown = new Cooldown(this);
         this.locations = new Locations(this);
-        this.homes = new Homes(this);
-        this.economy = new Economy(this);
+        this.homes = new Homes();
+        this.economy = new Economy();
         this.itemValue = new ItemValue(this);
         this.enderChest = new EnderChest(this);
         this.listeners = new Listeners(this);
         this.commands = new Commands(this);
+
     }
 
     public void disable() {
@@ -60,6 +69,7 @@ public class Main {
         if (tablistTask != null && !tablistTask.isCancelled()) tablistTask.cancel();
         playerTestScoreboard.clear();
         playerTablistUtil.clear();
+        mySQL.disconnect();
     }
 
     public void enable() {
@@ -74,11 +84,11 @@ public class Main {
         scoreboardTask = instance.getServer().getScheduler().runTaskTimer(instance, () -> {
             for (Player player : instance.getServer().getOnlinePlayers())
                 playerTestScoreboard.computeIfAbsent(player, user -> new TestScoreboard(user, this)).run();
-        }, 0L, 1L);
+        }, 0L, 20L);
         tablistTask = instance.getServer().getScheduler().runTaskTimerAsynchronously(instance, () -> {
             for (Player player : instance.getServer().getOnlinePlayers())
                 playerTablistUtil.computeIfAbsent(player, user -> new TablistUtil(player, this)).setScoreboardTabList();
-        }, 0L, 1L);
+        }, 0L, 20L);
     }
 
     public CityBuild getInstance() {
@@ -123,5 +133,13 @@ public class Main {
 
     public EnderChest getEnderChest() {
         return enderChest;
+    }
+
+    public PlayerInventory getPlayerInventory() {
+        return playerInventory;
+    }
+
+    public User getUser() {
+        return MurmelAPI.getUser();
     }
 }
