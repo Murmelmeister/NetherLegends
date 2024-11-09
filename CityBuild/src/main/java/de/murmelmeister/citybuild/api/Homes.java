@@ -1,63 +1,32 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
-import de.murmelmeister.citybuild.util.FileUtil;
-import de.murmelmeister.citybuild.util.config.Configs;
+import de.murmelmeister.murmelapi.utils.Database;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Homes {
-    private final Logger logger;
-    private final Config defaultConfig;
-    private final Server server;
 
-    private File file;
-    private YamlConfiguration config;
-    private List<String> homeList;
-
-    public Homes(Main main) {
-        this.logger = main.getLogger();
-        this.defaultConfig = main.getConfig();
-        this.server = main.getInstance().getServer();
+    public Homes() {
+        String tableName = "CB_Home";
+        createTable(tableName);
+        Procedure.loadAll(tableName);
     }
 
-    public void create(UUID uuid) {
-        String fileName = uuid + ".yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//Homes//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        this.config = YamlConfiguration.loadConfiguration(file);
+    private void createTable(String tableName) {
+        Database.createTable(tableName, "UserID INT, HomeName VARCHAR(100), PRIMARY KEY (UserID, HomeName), WorldName VARCHAR(100), WorldType VARCHAR(100), " +
+                                        "X DOUBLE, Y DOUBLE, Z DOUBLE, Yaw DOUBLE, Pitch DOUBLE");
     }
 
-    public void save() {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public boolean hasHome(int userId, String homeName) {
+        return Database.callExists(Procedure.HOME_GET.getName(), userId, homeName);
     }
 
-    public void createUsername(UUID uuid, String name) {
-        create(uuid);
-        set("Username", name);
-        this.homeList = getHomeList();
-        set("HomeList", homeList);
-        save();
-    }
-
-    public void addHome(Player player, String name) {
-        Location location = player.getLocation();
-        String path = "Homes." + name;
-
+    public void addHome(int userId, String homeName, Location location) {
+        if (homeName.length() > 100) throw new IllegalArgumentException("Home name cannot be longer than 100 characters");
+        if (hasHome(userId, homeName)) return;
         String worldName = location.getWorld().getName();
         String environment = location.getWorld().getEnvironment().name();
         double x = location.getBlockX() + 0.5D;
@@ -65,98 +34,55 @@ public class Homes {
         double z = location.getBlockZ() + 0.5D;
         double yaw = Math.round(location.getYaw() / 45.0F) * 45;
         double pitch = Math.round(location.getPitch() / 45.0F) * 45;
-
-        create(player.getUniqueId());
-        this.homeList = getHomeList();
-        if (!(homeList.contains(name))) {
-            homeList.add(name);
-            set("HomeList", homeList);
-        }
-
-        set(path + ".Name", name);
-        set(path + ".WorldName", worldName);
-        set(path + ".Environment", environment);
-        set(path + ".X", x);
-        set(path + ".Y", y);
-        set(path + ".Z", z);
-        set(path + ".Yaw", yaw);
-        set(path + ".Pitch", pitch);
-        save();
+        Database.callUpdate(Procedure.HOME_ADD.getName(), userId, homeName, worldName, environment, x, y, z, yaw, pitch);
     }
 
-    public void addHome(UUID target, Player player, String name) {
-        Location location = player.getLocation();
-        String path = "Homes." + name;
-
-        String worldName = location.getWorld().getName();
-        String environment = location.getWorld().getEnvironment().name();
-        double x = location.getBlockX() + 0.5D;
-        double y = location.getBlockY() + 0.25D;
-        double z = location.getBlockZ() + 0.5D;
-        double yaw = Math.round(location.getYaw() / 45.0F) * 45;
-        double pitch = Math.round(location.getPitch() / 45.0F) * 45;
-
-        create(target);
-        this.homeList = getHomeList();
-        if (!(homeList.contains(name))) {
-            homeList.add(name);
-            set("HomeList", homeList);
-        }
-
-        set(path + ".Name", name);
-        set(path + ".WorldName", worldName);
-        set(path + ".Environment", environment);
-        set(path + ".X", x);
-        set(path + ".Y", y);
-        set(path + ".Z", z);
-        set(path + ".Yaw", yaw);
-        set(path + ".Pitch", pitch);
-        save();
+    public void removeHome(int userId, String homeName) {
+        Database.callUpdate(Procedure.HOME_REMOVE.getName(), userId, homeName);
     }
 
-    public void removeHome(UUID uuid, String name) {
-        create(uuid);
-        this.homeList = getHomeList();
-        homeList.remove(name);
-        set("HomeList", homeList);
-        set("Homes." + name, null);
-        save();
-    }
-
-    public Location getHome(UUID uuid, String name) {
-        create(uuid);
-        String path = "Homes." + name;
-        String worldName = getString(path + ".WorldName");
-        double x = getDouble(path + ".X");
-        double y = getDouble(path + ".Y");
-        double z = getDouble(path + ".Z");
-        double yaw = getDouble(path + ".Yaw");
-        double pitch = getDouble(path + ".Pitch");
+    public Location getHome(Server server, int userId, String homeName) {
+        String worldName = Database.callQuery(null, "WorldName", String.class, Procedure.HOME_GET.getName(), userId, homeName);
+        double x = Database.callQuery(0.0D, "X", double.class, Procedure.HOME_GET.getName(), userId, homeName);
+        double y = Database.callQuery(0.0D, "Y", double.class, Procedure.HOME_GET.getName(), userId, homeName);
+        double z = Database.callQuery(0.0D, "Z", double.class, Procedure.HOME_GET.getName(), userId, homeName);
+        double yaw = Database.callQuery(0.0D, "Yaw", double.class, Procedure.HOME_GET.getName(), userId, homeName);
+        double pitch = Database.callQuery(0.0D, "Pitch", double.class, Procedure.HOME_GET.getName(), userId, homeName);
 
         World world = server.getWorld(worldName);
         return new Location(world, x, y, z, (float) yaw, (float) pitch);
     }
 
-    public boolean hasHome(UUID uuid, String name) {
-        create(uuid);
-        return config.get("Homes." + name) != null;
+    public List<String> getHomes(int userId) {
+        return Database.callQueryList("HomeName", String.class, Procedure.HOME_GET_ALL.getName(), userId);
     }
 
-    public List<String> getHomeList() {
-        this.homeList = new ArrayList<>();
-        if (config.contains("HomeList")) homeList = config.getStringList("HomeList");
-        return homeList;
-    }
+    private enum Procedure {
+        HOME_ADD("Home_Add", "uid INT, hname VARCHAR(100), wname VARCHAR(100), wtype VARCHAR(100), wx DOUBLE, wy DOUBLE, wz DOUBLE, wyaw DOUBLE, wp DOUBLE",
+                "INSERT INTO [TABLE] VALUES (uid, hname, wname, wtype, wx, wy, wz, wyaw, wp);"),
+        HOME_REMOVE("Home_Remove", "uid INT, hname VARCHAR(100)", "DELETE FROM [TABLE] WHERE UserID=uid AND HomeName=hname;"),
+        HOME_GET("Home_Get", "uid INT, hname VARCHAR(100)", "SELECT * FROM [TABLE] WHERE UserID=uid AND HomeName=hname;"),
+        HOME_GET_ALL("Home_GetAll", "uid INT", "SELECT * FROM [TABLE] WHERE UserID=uid;");
+        private static final Procedure[] VALUES = values();
 
-    private void set(String path, Object value) {
-        config.set(path, value);
-    }
+        private final String name;
+        private final String query;
 
-    private String getString(String path) {
-        return config.getString(path);
-    }
+        Procedure(final String name, final String input, final String query) {
+            this.name = name;
+            this.query = Database.getProcedureQueryWithoutObjects(name, input, query);
+        }
 
-    private double getDouble(String path) {
-        return config.getDouble(path);
+        public String getName() {
+            return name;
+        }
+
+        public String getQuery(String tableName) {
+            return query.replace("[TABLE]", tableName);
+        }
+
+        public static void loadAll(String tableName) {
+            for (Procedure procedure : VALUES) Database.update(procedure.getQuery(tableName));
+        }
     }
 }

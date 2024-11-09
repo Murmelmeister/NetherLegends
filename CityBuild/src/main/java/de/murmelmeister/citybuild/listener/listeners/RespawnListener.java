@@ -1,12 +1,10 @@
-package de.murmelmeister.lobby.listener.listeners;
+package de.murmelmeister.citybuild.listener.listeners;
 
-import de.murmelmeister.lobby.Main;
-import de.murmelmeister.lobby.listener.Listeners;
-import de.murmelmeister.lobby.util.Items;
+import de.murmelmeister.citybuild.Main;
+import de.murmelmeister.citybuild.listener.Listeners;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class RespawnListener extends Listeners {
@@ -22,14 +20,8 @@ public class RespawnListener extends Listeners {
             @Override
             public void run() {
                 player.spigot().respawn();
-                player.teleport(locations.getSpawn());
+                if (locations.isSpawnExist()) player.teleport(locations.getSpawn());
             }
         }.runTaskLater(instance, 2L);
-    }
-
-    @EventHandler
-    public void handleRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        Items.setLobbyItems(config, player);
     }
 }

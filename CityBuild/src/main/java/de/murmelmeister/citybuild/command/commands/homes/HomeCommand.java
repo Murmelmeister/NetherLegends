@@ -33,18 +33,28 @@ public class HomeCommand extends CommandManager {
             return true;
         }
 
-        if (!(homes.hasHome(player.getUniqueId(), args[0]))) {
-            sendMessage(player, message.getString(Messages.COMMAND_NOT_EXIST_HOME).replace("[HOME]", args[0]));
+        int userId = user.getId(player.getUniqueId());
+
+        if (userId == -2) {
+            logger.error("{} has no ID in the database", player.getName());
             return true;
         }
 
-        player.teleport(homes.getHome(player.getUniqueId(), args[0]));
-        sendMessage(player, message.getString(Messages.COMMAND_SEND_HOME).replace("[HOME]", args[0]));
+        String homeName = args[0];
+        if (!(homes.hasHome(userId, homeName))) {
+            sendMessage(player, message.getString(Messages.COMMAND_NOT_EXIST_HOME).replace("[HOME]", homeName));
+            return true;
+        }
+
+        player.teleport(homes.getHome(player.getServer(), userId, homeName));
+        sendMessage(player, message.getString(Messages.COMMAND_SEND_HOME).replace("[HOME]", homeName));
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return tabComplete(homes.getHomeList(), args, 1);
+        Player player = getPlayer(sender);
+        int userId = user.getId(player.getUniqueId());
+        return tabComplete(homes.getHomes(userId), args, 1);
     }
 }

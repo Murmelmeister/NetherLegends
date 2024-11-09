@@ -1,107 +1,134 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.Main;
-import de.murmelmeister.citybuild.configs.Config;
-import de.murmelmeister.citybuild.util.FileUtil;
-import de.murmelmeister.citybuild.util.config.Configs;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.slf4j.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.UUID;
+import de.murmelmeister.murmelapi.utils.Database;
 
 public class Economy {
-    private final Logger logger;
-    private final Config defaultConfig;
 
-    private File file;
-    private YamlConfiguration config;
-
-    public Economy(Main main) {
-        this.logger = main.getLogger();
-        this.defaultConfig = main.getConfig();
+    public Economy() {
+        String tableName = "CB_Economy";
+        createTable(tableName);
+        Procedure.loadAll(tableName);
     }
 
-    public void create(UUID uuid) {
-        String fileName = uuid + ".yml";
-        this.file = FileUtil.createFile(logger, String.format("plugins//%s//Economy//UserData//", defaultConfig.getString(Configs.FILE_NAME)), fileName);
-        this.config = YamlConfiguration.loadConfiguration(file);
+    private void createTable(String tableName) {
+        Database.createTable(tableName, "UserID INT PRIMARY KEY, Money DOUBLE, BankMoney DOUBLE");
     }
 
-    public void save() {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public boolean existUser(int userId) {
+        return Database.callExists(Procedure.ECONOMY_GET_USER.getName(), userId);
+    }
+
+    public void createUser(int userId) {
+        if (existUser(userId)) return;
+        Database.callUpdate(Procedure.ECONOMY_CREATE_USER.getName(), userId, 0, 0);
+    }
+
+    public void deleteUser(int userId) {
+        Database.callUpdate(Procedure.ECONOMY_DELETE_USER.getName(), userId);
+    }
+
+    public double getMoney(int userId) {
+        return Database.callQuery(0.0D, "Money", double.class, Procedure.ECONOMY_GET_USER.getName(), userId);
+    }
+
+    public double getBankMoney(int userId) {
+        return Database.callQuery(0.0D, "BankMoney", double.class, Procedure.ECONOMY_GET_USER.getName(), userId);
+    }
+
+    public void setMoney(int userId, double amount) {
+        Database.callUpdate(Procedure.ECONOMY_UPDATE_MONEY.getName(), userId, amount);
+    }
+
+    public void setBankMoney(int userId, double amount) {
+        Database.callUpdate(Procedure.ECONOMY_UPDATE_BANK.getName(), userId, amount);
+    }
+
+    public void addMoney(int userId, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
+        double current = getMoney(userId);
+        current += amount;
+        setMoney(userId, current);
+    }
+
+    public void addBankMoney(int userId, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
+        double current = getBankMoney(userId);
+        current += amount;
+        setBankMoney(userId, current);
+    }
+
+    public void removeMoney(int userId, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
+        double current = getMoney(userId);
+        current -= amount;
+        setMoney(userId, current);
+    }
+
+    public void removeBankMoney(int userId, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Amount cannot be negative");
+        double current = getBankMoney(userId);
+        current -= amount;
+        setBankMoney(userId, current);
+    }
+
+    public void resetMoney(int userId) {
+        setMoney(userId, 0);
+    }
+
+    public void resetBankMoney(int userId) {
+        setBankMoney(userId, 0);
+    }
+
+    public boolean hasEnoughMoney(int userId, double money) {
+        if (money < 0) throw new IllegalArgumentException("Money cannot be negative");
+        return money <= getMoney(userId);
+    }
+
+    public boolean hasEnoughBankMoney(int userId, double money) {
+        if (money < 0) throw new IllegalArgumentException("Money cannot be negative");
+        return money <= getBankMoney(userId);
+    }
+
+    public void payMoneyToPlayer(int userId, int targetId, double money) {
+        if (hasEnoughMoney(userId, money)) {
+            removeMoney(userId, money);
+            addMoney(targetId, money);
         }
     }
 
-    public void setUsername(UUID uuid, String name) {
-        create(uuid);
-        set("Username", name);
-        save();
+    public void payMoneyToBank(int userId, double money) {
+        if (hasEnoughMoney(userId, money)) {
+            removeMoney(userId, money);
+            addBankMoney(userId, money);
+        }
     }
 
-    public void createAccount(UUID uuid) {
-        create(uuid);
-        if (config.getString("Money") == null) set("Money", defaultMoney());
-        save();
-    }
+    private enum Procedure {
+        ECONOMY_CREATE_USER("CB_Economy_CreateUser", "uid INT, current DOUBLE, bank DOUBLE", "INSERT INTO [TABLE] VALUES (uid, current, bank);"),
+        ECONOMY_DELETE_USER("CB_Economy_DeleteUser", "uid INT", "DELETE FROM [TABLE] WHERE UserID=uid;"),
+        ECONOMY_UPDATE_MONEY("CB_Economy_Update_Money", "uid INT, current DOUBLE", "UPDATE [TABLE] SET Money=current WHERE UserID=uid;"),
+        ECONOMY_UPDATE_BANK("CB_Economy_Update_BankMoney", "uid INT, bank DOUBLE", "UPDATE [TABLE] SET BankMoney=bank WHERE UserID=uid;"),
+        ECONOMY_GET_USER("CB_Economy_GetUser", "uid INT", "SELECT * FROM [TABLE] WHERE UserID=uid;");
+        private static final Procedure[] VALUES = values();
 
-    public BigDecimal getMoney(UUID uuid) {
-        create(uuid);
-        BigDecimal exactMoney = defaultMoney();
-        double money = exactMoney.doubleValue();
-        new BigDecimal(money);
-        money = config.getDouble("Money");
-        exactMoney = BigDecimal.valueOf(money);
-        return exactMoney;
-    }
+        private final String name;
+        private final String query;
 
-    public void setMoney(UUID uuid, BigDecimal money) {
-        create(uuid);
-        set("Money", money);
-        save();
-    }
+        Procedure(final String name, final String input, final String query) {
+            this.name = name;
+            this.query = Database.getProcedureQueryWithoutObjects(name, input, query);
+        }
 
-    public void addMoney(UUID uuid, BigDecimal money) {
-        create(uuid);
-        BigDecimal amount = getMoney(uuid).add(money, MathContext.DECIMAL128);
-        set("Money", amount);
-        save();
-    }
+        public String getName() {
+            return name;
+        }
 
-    public void removeMoney(UUID uuid, BigDecimal money) {
-        create(uuid);
-        BigDecimal amount = getMoney(uuid).subtract(money, MathContext.DECIMAL128);
-        set("Money", amount);
-        save();
-    }
+        public String getQuery(String tableName) {
+            return query.replace("[TABLE]", tableName);
+        }
 
-    public void resetMoney(UUID uuid) {
-        create(uuid);
-        set("Money", defaultMoney());
-        save();
-    }
-
-    public void payMoney(UUID player, UUID target, BigDecimal money) {
-        removeMoney(player, money);
-        addMoney(target, money);
-    }
-
-    public boolean hasEnoughMoney(UUID uuid, double money) {
-        create(uuid);
-        return money <= getMoney(uuid).doubleValue();
-    }
-
-    public BigDecimal defaultMoney() {
-        return BigDecimal.valueOf(defaultConfig.getDouble(Configs.ECONOMY_DEFAULT_MONEY));
-    }
-
-    private void set(String path, Object value) {
-        config.set(path, value);
+        public static void loadAll(String tableName) {
+            for (Procedure procedure : VALUES) Database.update(procedure.getQuery(tableName));
+        }
     }
 }

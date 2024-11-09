@@ -29,26 +29,32 @@ public class MoneyCommand extends CommandManager {
         Player player = getPlayer(sender);
         if (!(existPlayer(sender))) return true;
 
+
+        int userId = user.getId(player.getUniqueId());
+
+        if (userId == -2) {
+            logger.error("{} has no ID in the database", player.getName());
+            return true;
+        }
+
         if (args.length == 0) {
             if (!(isEnable(sender, Configs.COMMAND_ENABLE_MONEY_USE))) return true;
             if (!(hasPermission(sender, Configs.PERMISSION_MONEY_USE))) return true;
-            sendMessage(player, message.getString(Messages.COMMAND_MONEY_USE).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(player.getUniqueId()))));
+            sendMessage(player, message.getString(Messages.COMMAND_MONEY_USE).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId))));
         } else if (args.length == 1) {
             if (!(isEnable(sender, Configs.COMMAND_ENABLE_MONEY_OTHER))) return true;
             if (!(hasPermission(sender, Configs.PERMISSION_MONEY_OTHER))) return true;
-            Player target = sender.getServer().getPlayer(args[0]);
+            String targetName = args[0];
+            OfflinePlayer target = sender.getServer().getOfflinePlayer(targetName);
 
-            if (target == null) {
-                OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                if (offlinePlayer.isOnline() || offlinePlayer.hasPlayedBefore()) {
-                    sendMessage(player, message.getString(Messages.COMMAND_MONEY_OTHER).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
-                            .replace("[MONEY]", decimalFormat.format(economy.getMoney(offlinePlayer.getUniqueId()))).replace("[PLAYER]", args[0]));
-                } else sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
+            int targetId = user.getId(target.getUniqueId());
+            if (targetId == -2) {
+                sendMessage(player, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", targetName));
                 return true;
             }
 
             sendMessage(player, message.getString(Messages.COMMAND_MONEY_OTHER).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
-                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(target.getUniqueId()))).replace("[PLAYER]", target.getName()));
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(targetId))).replace("[PLAYER]", targetName));
         } else sendMessage(sender, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
         return true;
     }

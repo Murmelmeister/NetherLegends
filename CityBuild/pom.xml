@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.murmelmeister.necronic</groupId>
         <artifactId>Necronic</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>CityBuild</artifactId>
@@ -60,6 +60,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>de.murmelmeister.murmelapi</groupId>
+            <artifactId>MurmelAPI-Main</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>

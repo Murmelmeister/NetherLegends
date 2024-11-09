@@ -34,14 +34,22 @@ public class AddHomeCommand extends CommandManager {
             return true;
         }
 
-        if (homes.hasHome(player.getUniqueId(), args[0])) {
-            sendMessage(player, message.getString(Messages.COMMAND_EXIST_HOME).replace("[HOME]", args[0]));
+        int userId = user.getId(player.getUniqueId());
+
+        if (userId == -2) {
+            logger.error("{} has no ID in the database", player.getName());
             return true;
         }
 
-        if (homeLimit(player)) {
-            homes.addHome(player, args[0]);
-            sendMessage(player, message.getString(Messages.COMMAND_ADD_HOME).replace("[HOME]", args[0]));
+        String homeName = args[0];
+        if (homes.hasHome(userId, homeName)) {
+            sendMessage(player, message.getString(Messages.COMMAND_EXIST_HOME).replace("[HOME]", homeName));
+            return true;
+        }
+
+        if (homeLimit(player, userId)) {
+            homes.addHome(userId, homeName, player.getLocation());
+            sendMessage(player, message.getString(Messages.COMMAND_ADD_HOME).replace("[HOME]", homeName));
         }
         return true;
     }
@@ -51,7 +59,7 @@ public class AddHomeCommand extends CommandManager {
         return new ArrayList<>();
     }
 
-    private boolean homeLimit(Player player) {
+    private boolean homeLimit(Player player, int userId) {
         if (player.hasPermission(config.getString(Configs.PERMISSION_HOME_UNLIMITED))) return true;
 
         int limit;
@@ -59,7 +67,7 @@ public class AddHomeCommand extends CommandManager {
         else if (player.hasPermission(config.getString(Configs.PERMISSION_HOME_LIMIT_RANK))) limit = config.getInt(Configs.HOME_LIMIT_RANK);
         else limit = config.getInt(Configs.HOME_LIMIT_DEFAULT);
 
-        if (homes.getHomeList().size() >= limit) {
+        if (homes.getHomes(userId).size() >= limit) {
             sendMessage(player, message.getString(Messages.COMMAND_HOME_LIMIT));
             return false;
         }

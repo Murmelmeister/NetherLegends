@@ -9,27 +9,32 @@ import de.murmelmeister.citybuild.listener.listeners.*;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
+import de.murmelmeister.murmelapi.user.User;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 public class Listeners implements Listener {
-    public final Main main;
-    public final CityBuild instance;
-    public final ListUtil listUtil;
+    protected final Main main;
+    protected final CityBuild instance;
+    protected final ListUtil listUtil;
 
-    public final Config config;
-    public final Message message;
-    public final Cooldown cooldown;
-    public final Locations locations;
-    public final Homes homes;
-    public final Economy economy;
-    public final ItemValue itemValue;
-    public final EnderChest enderChest;
+    protected final User user;
+
+    protected final Config config;
+    protected final Message message;
+    protected final Cooldown cooldown;
+    protected final Locations locations;
+    protected final Homes homes;
+    protected final Economy economy;
+    protected final ItemValue itemValue;
+    protected final EnderChest enderChest;
+    protected final PlayerInventory playerInventory;
 
     public Listeners(Main main) {
         this.main = main;
         this.instance = main.getInstance();
         this.listUtil = main.getListUtil();
+        this.user = main.getUser();
         this.config = main.getConfig();
         this.message = main.getMessage();
         this.cooldown = main.getCooldown();
@@ -38,12 +43,15 @@ public class Listeners implements Listener {
         this.economy = main.getEconomy();
         this.itemValue = main.getItemValue();
         this.enderChest = main.getEnderChest();
+        this.playerInventory = main.getPlayerInventory();
     }
 
     public void register() {
         addListener(new GodModeListener(main));
         addListener(new ConnectListener(main));
         addListener(new EnderChestListener(main));
+        addListener(new RespawnListener(main));
+        addListener(new LoggingListener(main));
         //addListener(new ItemValueListener(main));
         //addListener(new TestItem(main));
     }

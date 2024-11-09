@@ -6,7 +6,7 @@
 
     <groupId>de.murmelmeister.necronic</groupId>
     <artifactId>Necronic</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>CityBuild</module>

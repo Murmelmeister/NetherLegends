@@ -7,10 +7,7 @@ import de.murmelmeister.citybuild.command.commands.economy.*;
 import de.murmelmeister.citybuild.command.commands.homes.AddHomeCommand;
 import de.murmelmeister.citybuild.command.commands.homes.HomeCommand;
 import de.murmelmeister.citybuild.command.commands.homes.RemoveHomeCommand;
-import de.murmelmeister.citybuild.command.commands.inventories.AnvilCommand;
-import de.murmelmeister.citybuild.command.commands.inventories.EnderChestCommand;
-import de.murmelmeister.citybuild.command.commands.inventories.TrashCommand;
-import de.murmelmeister.citybuild.command.commands.inventories.WorkbenchCommand;
+import de.murmelmeister.citybuild.command.commands.inventories.*;
 import de.murmelmeister.citybuild.command.commands.locations.*;
 import de.murmelmeister.citybuild.command.commands.teleport.*;
 import org.bukkit.command.TabExecutor;
@@ -48,7 +45,6 @@ public class Commands {
         addCommand("live", new LiveCommand(main));
         addCommand("day", new DayCommand(main));
         addCommand("night", new NightCommand(main));
-        addCommand("head", new HeadCommand(main));
         addCommand("sign", new SignCommand(main));
         addCommand("unsign", new UnSignCommand(main));
         addCommand("rename", new RenameCommand(main));
@@ -64,6 +60,7 @@ public class Commands {
         addCommand("pay", new PayCommand(main));
         addCommand("sell", new SellCommand(main));
         addCommand("itemvalue", new ItemValueCommand(main));
+        addCommand("invsee", new InvseeCommand(main));
     }
 
     private void addCommand(String name, TabExecutor executor) {

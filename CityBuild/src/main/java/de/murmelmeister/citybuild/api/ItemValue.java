@@ -5,6 +5,7 @@ import de.murmelmeister.citybuild.configs.Config;
 import de.murmelmeister.citybuild.util.FileUtil;
 import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
+import de.murmelmeister.murmelapi.user.User;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ public class ItemValue {
     private final Logger logger;
     private final Config defaultConfig;
     private final Economy economy;
+    private final User user;
 
     private File file;
     private YamlConfiguration config;
@@ -32,6 +34,7 @@ public class ItemValue {
         this.logger = main.getLogger();
         this.defaultConfig = main.getConfig();
         this.economy = main.getEconomy();
+        this.user = main.getUser();
     }
 
     public void register() {
@@ -73,7 +76,8 @@ public class ItemValue {
             player.sendMessage(" Trying to remove more items than are available.");
         player.getInventory().removeItem(item);
         player.updateInventory();
-        economy.addMoney(player.getUniqueId(), result);
+        int userId = user.getId(player.getUniqueId());
+        economy.addMoney(userId, result.doubleValue());
         return result;
     }
 

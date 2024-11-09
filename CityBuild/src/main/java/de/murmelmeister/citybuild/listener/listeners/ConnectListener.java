@@ -35,10 +35,11 @@ public class ConnectListener extends Listeners {
         } else
             sendMessage(player, message.getString(Messages.EVENT_SPAWN_NOT_EXIST).replace("[PREFIX]", message.prefix()));
 
-        homes.createUsername(player.getUniqueId(), player.getName());
         cooldown.setUsername(player.getUniqueId(), player.getName());
-        economy.setUsername(player.getUniqueId(), player.getName());
-        economy.createAccount(player.getUniqueId());
+        int userId = user.getId(player.getUniqueId());
+        if (user.existsUser(player.getUniqueId())) {
+            economy.createUser(userId);
+        }
 
         for (int i = 1; i < 10; i++)
             enderChest.setAccess(player.getUniqueId(), i, player.hasPermission(config.getString(Configs.PERMISSION_ENDER_CHEST_SLOTS) + "." + i));
@@ -60,6 +61,7 @@ public class ConnectListener extends Listeners {
             player.sendTitle(HexColor.format(message.getString(Messages.EVENT_JOIN_TITLE)).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName()),
                     HexColor.format(message.getString(Messages.EVENT_JOIN_SUB_TITLE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
 
+        player.updateCommands();
     }
 
     @SuppressWarnings("deprecation")
@@ -76,5 +78,6 @@ public class ConnectListener extends Listeners {
         else event.setQuitMessage(null);
         listUtil.getGodMode().remove(player.getUniqueId());
         listUtil.getLive().remove(player.getUniqueId());
+        playerInventory.savePlayerInventory(player.getUniqueId(), player.getInventory());
     }
 }

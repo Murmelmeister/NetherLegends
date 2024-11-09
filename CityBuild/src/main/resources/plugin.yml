@@ -90,9 +90,6 @@ commands:
   night:
     usage: /night
     description: Set the time to night.
-  head:
-    usage: /head <name>
-    description: Give you a player head.
   sign:
     usage: /sign <sign...>
     description: Sign a item.
@@ -144,3 +141,6 @@ commands:
     description: Edit the item values.
     aliases:
       - iv
+  invsee:
+    usage: /invsee <PLAYER>
+    description: Open a player inventory.

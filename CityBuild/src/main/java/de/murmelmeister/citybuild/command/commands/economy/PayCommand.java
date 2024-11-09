@@ -4,13 +4,13 @@ import de.murmelmeister.citybuild.Main;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import de.murmelmeister.murmelapi.MurmelAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class PayCommand extends CommandManager {
@@ -29,6 +29,13 @@ public class PayCommand extends CommandManager {
         Player player = getPlayer(sender);
         if (!(existPlayer(sender))) return true;
 
+        int userId = user.getId(player.getUniqueId());
+
+        if (userId == -2) {
+            logger.error("{} has no ID in the database", player.getName());
+            return true;
+        }
+
         if (args.length != 2) {
             sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
             return true;
@@ -42,7 +49,7 @@ public class PayCommand extends CommandManager {
                 return true;
             }
 
-            payAllPlayers(player, args);
+            payAllPlayers(player, userId, args[1]);
             return true;
         }
 
@@ -52,12 +59,19 @@ public class PayCommand extends CommandManager {
             return true;
         }
 
-        if (args[1].equals("*")) {
-            payAllMoney(player, target);
+        int targetId = user.getId(target.getUniqueId());
+
+        if (targetId == -2) {
+            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
             return true;
         }
 
-        payPlayerMoney(player, target, args);
+        if (args[1].equals("*")) {
+            payAllMoney(player, target, userId, targetId);
+            return true;
+        }
+
+        payPlayerMoney(player, target, userId, targetId, args[1]);
         return true;
     }
 
@@ -66,42 +80,46 @@ public class PayCommand extends CommandManager {
         return tabCompletePlayers(sender, args, 1);
     }
 
-    private void payAllPlayers(Player player, String[] args) {
+    private void payAllPlayers(Player player, int userId, String args) {
         try {
-            BigDecimal money = new BigDecimal(args[1]);
+            double money = Double.parseDouble(args);
 
-            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -money.doubleValue() >= 0) {
+            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -money >= 0) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_NEGATIVE));
                 return;
             }
 
-            if (!(economy.hasEnoughMoney(player.getUniqueId(), money.doubleValue()))) {
+            if (!(economy.hasEnoughMoney(userId, money))) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
                 return;
             }
 
-            player.getServer().getOnlinePlayers().forEach(all -> {
-                economy.payMoney(player.getUniqueId(), all.getUniqueId(), money);
+            for (Player all : player.getServer().getOnlinePlayers()) {
+                int allIds = user.getId(all.getUniqueId());
+                if (allIds == -2) continue;
+                economy.payMoneyToPlayer(userId, allIds, money);
                 sendMessage(all, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-            });
+
+            }
+
             sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", "all").replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
         } catch (NumberFormatException exception) {
             sendMessage(player, message.getString(Messages.NO_NUMBER));
         }
     }
 
-    private void payAllMoney(Player player, Player target) {
+    private void payAllMoney(Player player, Player target, int userId, int targetId) {
         if (!(hasPermission(player, Configs.PERMISSION_PAY_ALL_MONEY))) return;
 
         try {
-            BigDecimal allMoney = economy.getMoney(player.getUniqueId());
+            double allMoney = economy.getMoney(userId);
 
-            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -allMoney.doubleValue() >= 0) {
+            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -allMoney >= 0) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_NEGATIVE));
                 return;
             }
 
-            economy.payMoney(player.getUniqueId(), target.getUniqueId(), allMoney);
+            economy.payMoneyToPlayer(userId, targetId, allMoney);
             sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(allMoney)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
             sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(allMoney)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
         } catch (NumberFormatException exception) {
@@ -109,21 +127,21 @@ public class PayCommand extends CommandManager {
         }
     }
 
-    private void payPlayerMoney(Player player, Player target, String[] args) {
+    private void payPlayerMoney(Player player, Player target, int userId, int targetId, String args) {
         try {
-            BigDecimal money = new BigDecimal(args[1]);
+            double money = Double.parseDouble(args);
 
-            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -money.doubleValue() >= 0) {
+            if (!(player.hasPermission(config.getString(Configs.PERMISSION_PAY_NEGATIVE))) && -money >= 0) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_NEGATIVE));
                 return;
             }
 
-            if (!(economy.hasEnoughMoney(player.getUniqueId(), money.doubleValue()))) {
+            if (!(economy.hasEnoughMoney(userId, money))) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
                 return;
             }
 
-            economy.payMoney(player.getUniqueId(), target.getUniqueId(), money);
+            economy.payMoneyToPlayer(userId, targetId, money);
             sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
             sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
         } catch (NumberFormatException exception) {
