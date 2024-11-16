@@ -10,6 +10,7 @@ public enum Messages {
     INVALID_NUMBERS("Invalid.Numbers", "&cUse numbers."),
     COOLDOWN_MESSAGE("Cooldown.Message", "&cYou can only use this again on&e [DATE]&c."),
     COOLDOWN_DATE("Cooldown.Date", " at "),
+    INVALID_ITEM("Invalid.Item", "&cPlease hold an item in your hand."),
     COMMAND_RELOAD("Command.Reload", "&7The configurations have been&a reloaded&7."),
     COMMAND_LOCATION_NOT_EXIST("Command.LocationNotExist", "&7The location &e[LOCATION]&7 does not&c exist&7."),
     COMMAND_SEND_SPAWN("Command.Spawn.Send", "&7You have&a teleport&7 to the&e Spawn&7."),
@@ -103,7 +104,29 @@ public enum Messages {
     ENDER_CHEST_MENU_USE("EnderChest.Menu.Use", "&5EnderChest - Menu"),
     ENDER_CHEST_MENU_OTHER("EnderChest.Menu.Other", "&5EnderChest - Menu - [PLAYER]"),
     ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", "&aSlot [SLOT]"),
-    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", "&cNot unlocked");
+    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", "&cNot unlocked"),
+    SHOP_CATEGORY_EXIST("Shop.Category.ExitItem", "&cThe category already exists."),
+    SHOP_CATEGORY_NOT_EXIST("Shop.Category.NotExitItem", "&cThe category does not exist."),
+    SHOP_CATEGORY_EMPTY("Shop.Category.Empty", "&cThe category is empty."),
+    SHOP_CATEGORY_ADD("Shop.Category.Add", "&7The category has been&a added&7."),
+    SHOP_CATEGORY_REMOVE("Shop.Category.Remove", "&7The category has been&a removed&7."),
+    SHOP_CATEGORY_ITEMS_DOES_NOT_EXIST("Shop.Category.ItemsDoesNotExist", "&cThe category does not have any items."),
+    SHOP_ITEM_BUY_ONE("Shop.Item.Buy.One", "<#858585>Price per buy item: <#aa00aa>[PRICE]"),
+    SHOP_ITEM_BUY_STACK("Shop.Item.Buy.Stack", "<#858585>Price per buy stack: <#aa00aa>[PRICE]"),
+    SHOP_ITEM_SELL("Shop.Item.Sell", "<#858585>Price per sell item: <#cc8800>[SELL]"),
+    SHOP_ITEM_MONEY("Shop.Item.Money.Current", "<#858585>Your money: <#00cc88>[MONEY]"),
+    SHOP_ITEM_MONEY_LEFT_ITEM("Shop.Item.Money.Left.Item", "<#858585>Money left per item: <#772277>[MONEY]"),
+    SHOP_ITEM_MONEY_LEFT_STACK("Shop.Item.Money.Left.Stack", "<#858585>Money left per stack: <#772277>[MONEY]"),
+    SHOP_ITEM_MONEY_NOT_ENOUGH_ITEM("Shop.Item.Money.NotEnough.Item", "<#858585>Money left per item: <#990000>not enough money"),
+    SHOP_ITEM_MONEY_NOT_ENOUGH_STACK("Shop.Item.Money.NotEnough.Stack", "<#858585>Money left per stack: <#990000>not enough money"),
+    SHOP_ITEM_MONEY_NOT_ENOUGH("Shop.Item.Money.NotEnough.Money", "<#cc0099>You don't have enough money to buy this item."),
+    SHOP_ITEM_EXIST("Shop.Item.Exist", "&cThe item already exists."),
+    SHOP_ITEM_NOT_EXIST("Shop.Item.NotExist", "&cThe item does not exist."),
+    SHOP_ITEM_ADD("Shop.Item.Add", "&7The item has been&a added&7."),
+    SHOP_ITEM_REMOVE("Shop.Item.Remove", "&7The item has been&a removed&7."),
+    SHOP_CATEGORY_EDIT("Shop.Category.Edit", "&7The category has been&a edited&7."),
+    SHOP_ITEM_EDIT("Shop.Item.Edit", "&7The item has been&a edited&7."),
+    ;
     public static final Messages[] VALUES = values();
 
     private final String path;

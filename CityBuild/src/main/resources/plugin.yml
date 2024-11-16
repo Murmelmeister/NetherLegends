@@ -144,3 +144,12 @@ commands:
   invsee:
     usage: /invsee <PLAYER>
     description: Open a player inventory.
+  shopcategory:
+    usage: /shopcategory <add|remove|edit> <category>
+    description: Open the shop category.
+  shopitem:
+    usage: /shopitem <add|remove|edit> <category> <item>
+    description: Open the shop item.
+  shop:
+    usage: /shop
+    description: Open the shop.

@@ -66,6 +66,11 @@
             <version>0.0.5-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>de.murmelmeister.murmelapi</groupId>
+            <artifactId>MurmelAPI-Paper</artifactId>
+            <version>0.0.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>

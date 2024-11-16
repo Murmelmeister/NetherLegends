@@ -2,6 +2,8 @@ package de.murmelmeister.citybuild.command;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.*;
+import de.murmelmeister.citybuild.api.shop.ShopCategory;
+import de.murmelmeister.citybuild.api.shop.ShopItem;
 import de.murmelmeister.citybuild.command.commands.*;
 import de.murmelmeister.citybuild.command.commands.economy.*;
 import de.murmelmeister.citybuild.command.commands.homes.AddHomeCommand;
@@ -9,6 +11,9 @@ import de.murmelmeister.citybuild.command.commands.homes.HomeCommand;
 import de.murmelmeister.citybuild.command.commands.homes.RemoveHomeCommand;
 import de.murmelmeister.citybuild.command.commands.inventories.*;
 import de.murmelmeister.citybuild.command.commands.locations.*;
+import de.murmelmeister.citybuild.command.commands.shop.ShopCommand;
+import de.murmelmeister.citybuild.command.commands.shop.category.ShopCategoryCommand;
+import de.murmelmeister.citybuild.command.commands.shop.item.ShopItemCommand;
 import de.murmelmeister.citybuild.command.commands.teleport.*;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
@@ -46,6 +51,8 @@ public abstract class CommandManager implements TabExecutor {
     protected final EnderChest enderChest;
     protected final DecimalFormat decimalFormat;
     protected final PlayerInventory playerInventory;
+    protected final ShopCategory shopCategory;
+    protected final ShopItem shopItem;
 
     public CommandManager(CityBuild plugin) {
         this.logger = plugin.getSLF4JLogger();
@@ -60,6 +67,8 @@ public abstract class CommandManager implements TabExecutor {
         this.itemValue = plugin.getItemValue();
         this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
+        this.shopCategory = plugin.getShopCategory();
+        this.shopItem = plugin.getShopItem();
         this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
     }
 
@@ -183,6 +192,9 @@ public abstract class CommandManager implements TabExecutor {
         addCommand(plugin, "sell", new SellCommand(plugin));
         addCommand(plugin, "itemvalue", new ItemValueCommand(plugin));
         addCommand(plugin, "invsee", new InvseeCommand(plugin));
+        addCommand(plugin, "shopcategory", new ShopCategoryCommand(plugin));
+        addCommand(plugin, "shopitem", new ShopItemCommand(plugin));
+        addCommand(plugin, "shop", new ShopCommand(plugin));
     }
 
     private static void addCommand(Plugin plugin, String name, TabExecutor executor) {

@@ -6,6 +6,7 @@ import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,10 @@ public class CityBuildReloadCommand extends CommandManager {
         this.message.reloadFile();
         this.locations.reloadFile();
         this.itemValue.reloadFile();
+
+        for (Player player : sender.getServer().getOnlinePlayers())
+            player.closeInventory();
+
         sendMessage(sender, message.getString(Messages.COMMAND_RELOAD));
         return true;
     }

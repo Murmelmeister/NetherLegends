@@ -83,6 +83,9 @@ public enum Configs {
     PERMISSION_ITEM_VALUE_GET("Permission.ItemValue.Get", "citybuild.command.itemvalue.get"),
     PERMISSION_ITEM_VALUE_SET("Permission.ItemValue.Set", "citybuild.command.itemvalue.set"),
     PERMISSION_INVSEE("Permission.InvSee", "citybuild.command.invsee"),
+    PERMISSION_SHOP_MENU("Permission.Shop.Menu", "citybuild.command.shop.menu"),
+    PERMISSION_SHOP_CATEGORY("Permission.Shop.Category", "citybuild.command.shop.category"),
+    PERMISSION_SHOP_ITEM("Permission.Shop.Item", "citybuild.command.shop.item"),
     COMMAND_ENABLE_ENDER_CHEST_COMMAND("Command.Enable.EnderChest.Command", true),
     COMMAND_ENABLE_ENDER_CHEST_USE("Command.Enable.EnderChest.Use", true),
     COMMAND_ENABLE_ENDER_CHEST_OTHER("Command.Enable.EnderChest.Other", true),
@@ -147,6 +150,9 @@ public enum Configs {
     COMMAND_ENABLE_ITEM_VALUE_GET("Command.Enable.ItemValue.Get", true),
     COMMAND_ENABLE_ITEM_VALUE_SET("Command.Enable.ItemValue.Set", true),
     COMMAND_ENABLE_INVSEE("Command.Enable.InvSee", true),
+    COMMAND_ENABLE_SHOP_MENU("Command.Enable.Shop.Menu", true),
+    COMMAND_ENABLE_SHOP_CATEGORY("Command.Enable.Shop.Category", true),
+    COMMAND_ENABLE_SHOP_ITEM("Command.Enable.Shop.Item", true),
     EVENT_ENABLE_PLAYER_JOIN("Event.Enable.PlayerJoin", true),
     EVENT_ENABLE_PLAYER_QUIT("Event.Enable.PlayerQuit", true),
     EVENT_ENABLE_TELEPORT_TO_SPAWN("Event.Enable.TeleportToSpawn", true),
@@ -186,7 +192,11 @@ public enum Configs {
     ECONOMY_DEFAULT_ITEM_SELL_PRICE("Economy.Default.ItemSellPrice", 0L),
     MATERIAL_CASE("Material.Case", false),
     ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", Material.LIME_STAINED_GLASS_PANE.toString()),
-    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", Material.RED_STAINED_GLASS_PANE.toString());
+    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", Material.RED_STAINED_GLASS_PANE.toString()),
+    SHOP_CATEGORY_TITLE("Shop.Category.Title", "<#ccff88>Shop Menu"),
+    SHOP_CATEGORY_PLACEHOLDER("Shop.Category.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    SHOP_ITEM_TITLE("Shop.Item.Title", "<#ccff88>[CATEGORY] Items"),
+    SHOP_ITEM_PLACEHOLDER("Shop.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),;
     public static final Configs[] VALUES = values();
 
     private final String path;
