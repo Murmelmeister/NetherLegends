@@ -8,6 +8,7 @@ import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +29,22 @@ public class EconomyCommand extends CommandManager {
         if (args.length >= 2) {
             String username = args[1];
             String amount = args[2];
+
+            if (username.equals("*")) {
+                for (Player all : sender.getServer().getOnlinePlayers()) {
+                    int allIds = user.getId(all.getUniqueId());
+                    if (allIds == -2) continue;
+                    switch (args[0]) {
+                        case "set" -> economySet(sender, allIds, all.getName(), amount);
+                        case "add" -> economyAdd(sender, allIds, all.getName(), amount);
+                        case "remove" -> economyRemove(sender, allIds, all.getName(), amount);
+                        case "reset" -> economyReset(sender, allIds, all.getName());
+                        default ->
+                                sendMessage(sender, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
+                    }
+                }
+                return true;
+            }
 
             OfflinePlayer target = sender.getServer().getOfflinePlayer(username);
             int targetId = user.getId(target.getUniqueId());
