@@ -5,10 +5,10 @@ import de.murmelmeister.citybuild.api.*;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.listener.listeners.*;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.murmelapi.user.User;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -60,7 +60,7 @@ public class ListenerManager implements Listener {
 
     public void sendMessage(CommandSender sender, String message) {
         if (config.getBoolean(Configs.PREFIX_ENABLE))
-            sender.sendMessage(HexColor.format(this.message.prefix() + message));
-        else sender.sendMessage(HexColor.format(message));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(this.message.prefix() + message));
+        else sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
     }
 }

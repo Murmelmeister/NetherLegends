@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,15 +33,100 @@ public class SellCommand extends CommandManager {
             return true;
         }
 
-        ItemStack itemStack = player.getItemInHand();
-        if (itemStack.getType().equals(Material.AIR)) {
-            sendMessage(player, message.getString(Messages.COMMAND_SELL_AIR));
+        ItemStack mainItem = player.getInventory().getItemInMainHand();
+        if (mainItem.getType() == Material.AIR) {
+            sendMessage(player, message.getString(Messages.INVALID_ITEM));
             return true;
         }
 
+        String itemId = mainItem.getType().name(); // TODO: Fix that the item has a key!
+        if (!customItems.existItem(itemId)) {
+            sendMessage(player, message.getString(Messages.INVALID_ITEM));
+            return true;
+        }
+
+        if (!shopItem.existItem(itemId)) {
+            sendMessage(player, message.getString(Messages.INVALID_ITEM));
+            return true;
+        }
+
+        double sellPrice = shopItem.getSellPrice(itemId);
+        String displayName = customItems.getDisplayName(itemId);
+
         switch (args[0]) {
-            case "hand" -> sellHand(player, itemStack);
-            case "price" -> sellPrice(player, itemStack);
+            case "show" -> {
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_SHOW_ONE)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice))
+                        .replace("[ITEM]", displayName));
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_SHOW_STACK)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * mainItem.getAmount()))
+                        .replace("[AMOUNT]", mainItem.getAmount() + "")
+                        .replace("[ITEM]", displayName));
+
+                int amount = 0;
+                for (ItemStack itemStack : player.getInventory().getContents()) {
+                    if (itemStack != null && itemStack.isSimilar(mainItem)) {
+                        amount += itemStack.getAmount();
+                    }
+                }
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_SHOW_INVENTORY)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * amount))
+                        .replace("[AMOUNT]", amount + "")
+                        .replace("[ITEM]", displayName));
+            }
+            case "one" -> {
+                int amount = mainItem.getAmount();
+                amount -= 1;
+                mainItem.setAmount(amount);
+                player.updateInventory();
+
+                int userId = user.getId(player.getUniqueId());
+                economy.addMoney(userId, sellPrice);
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_ONE)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice))
+                        .replace("[ITEM]", displayName));
+                logger.info(message.getString(Messages.COMMAND_SELL_LOGGER_ONE)
+                        .replace("[PLAYER]", player.getName())
+                        .replace("[ITEM]", displayName)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice)));
+            }
+            case "stack" -> {
+                int amount = mainItem.getAmount();
+                player.getInventory().removeItem(mainItem);
+                player.updateInventory();
+                int userId = user.getId(player.getUniqueId());
+                economy.addMoney(userId, sellPrice * amount);
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_STACK)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * amount))
+                        .replace("[AMOUNT]", amount + "")
+                        .replace("[ITEM]", displayName));
+                logger.info(message.getString(Messages.COMMAND_SELL_LOGGER_STACK)
+                        .replace("[PLAYER]", player.getName())
+                        .replace("[AMOUNT]", amount + "")
+                        .replace("[ITEM]", displayName)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * amount)));
+            }
+            case "inventory" -> {
+                int amount = 0;
+                for (ItemStack itemStack : player.getInventory().getContents()) {
+                    if (itemStack != null && itemStack.isSimilar(mainItem)) {
+                        amount += itemStack.getAmount();
+                        player.getInventory().removeItem(itemStack);
+                    }
+                }
+                player.updateInventory();
+                int userId = user.getId(player.getUniqueId());
+                economy.addMoney(userId, sellPrice * amount);
+                sendMessage(player, message.getString(Messages.COMMAND_SELL_INVENTORY)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * amount))
+                        .replace("[AMOUNT]", amount + "")
+                        .replace("[ITEM]", displayName));
+                logger.info(message.getString(Messages.COMMAND_SELL_LOGGER_INVENTORY)
+                        .replace("[PLAYER]", player.getName())
+                        .replace("[AMOUNT]", amount + "")
+                        .replace("[ITEM]", displayName)
+                        .replace("[MONEY]", decimalFormat.format(sellPrice * amount)));
+            }
             default ->
                     sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
         }
@@ -51,32 +135,6 @@ public class SellCommand extends CommandManager {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return tabComplete(Arrays.asList("hand", "price"), args, 1);
-    }
-
-    /*
-    /sell hand
-     */
-    private void sellHand(Player player, ItemStack itemStack) {
-        if (config.getBoolean(Configs.MATERIAL_CASE))
-            sendMessage(player, message.getString(Messages.COMMAND_SELL_USE).replace("[MONEY]", decimalFormat.format(itemValue.sellItem(player, itemStack)))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[ITEM]", itemStack.getType().name()).toLowerCase());
-        else
-            sendMessage(player, message.getString(Messages.COMMAND_SELL_USE).replace("[MONEY]", decimalFormat.format(itemValue.sellItem(player, itemStack)))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[ITEM]", itemStack.getType().name().toUpperCase()));
-    }
-
-    /*
-    /sell price
-     */
-    private void sellPrice(Player player, ItemStack itemStack) {
-        BigDecimal price = BigDecimal.valueOf(itemValue.getValue(itemStack.getType()));
-        BigDecimal result = price.multiply(BigDecimal.valueOf(itemStack.getAmount()));
-        if (config.getBoolean(Configs.MATERIAL_CASE))
-            sendMessage(player, message.getString(Messages.COMMAND_SELL_PRICE).replace("[ITEM]", itemStack.getType().name().toLowerCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(itemStack.getType())))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[PREFIX]", message.prefix()).replace("[AMOUNT]", decimalFormat.format(itemStack.getAmount())).replace("[VALUE]", decimalFormat.format(result)));
-        else
-            sendMessage(player, message.getString(Messages.COMMAND_SELL_PRICE).replace("[ITEM]", itemStack.getType().name().toUpperCase()).replace("[MONEY]", decimalFormat.format(itemValue.getValue(itemStack.getType())))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[PREFIX]", message.prefix()).replace("[AMOUNT]", decimalFormat.format(itemStack.getAmount())).replace("[VALUE]", decimalFormat.format(result)));
+        return tabComplete(Arrays.asList("show", "one", "stack", "inventory"), args);
     }
 }

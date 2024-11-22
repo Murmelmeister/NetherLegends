@@ -196,7 +196,12 @@ public enum Configs {
     SHOP_CATEGORY_TITLE("Shop.Category.Title", "<#ccff88>Shop Menu"),
     SHOP_CATEGORY_PLACEHOLDER("Shop.Category.Placeholder", "BLACK_STAINED_GLASS_PANE"),
     SHOP_ITEM_TITLE("Shop.Item.Title", "<#ccff88>[CATEGORY] Items"),
-    SHOP_ITEM_PLACEHOLDER("Shop.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),;
+    SHOP_ITEM_PLACEHOLDER("Shop.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    MURMEL_API_CONFIG_PATH("MurmelAPI.Config.Path", "./"),
+    MURMEL_API_CONFIG_FILE("MurmelAPI.Config.File", "mysql.properties"),
+    SELL_ITEM_TITLE("Sell.Item.Title", "<#ccff88>Sell Menu"),
+    SELL_ITEM_PLACEHOLDER("Sell.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    ;
     public static final Configs[] VALUES = values();
 
     private final String path;

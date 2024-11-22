@@ -126,7 +126,15 @@ public enum Messages {
     SHOP_ITEM_REMOVE("Shop.Item.Remove", "&7The item has been&a removed&7."),
     SHOP_CATEGORY_EDIT("Shop.Category.Edit", "&7The category has been&a edited&7."),
     SHOP_ITEM_EDIT("Shop.Item.Edit", "&7The item has been&a edited&7."),
-    ;
+    COMMAND_SELL_SHOW_ONE("Command.Sell.Show.One", "&7You get&e [MONEY] money &7 for one&d [ITEM]&7."),
+    COMMAND_SELL_SHOW_STACK("Command.Sell.Show.Stack", "&7You get&e [MONEY] money &7 for&e [AMOUNT]&7x&e [ITEM]&7."),
+    COMMAND_SELL_SHOW_INVENTORY("Command.Sell.Show.Inventory", "&7You get&e [MONEY] money &7 for&e [AMOUNT]&7x&e [ITEM]&7."),
+    COMMAND_SELL_ONE("Command.Sell.One", "&7You have sold&e one [ITEM]&7 for&e [MONEY] money&7."),
+    COMMAND_SELL_STACK("Command.Sell.Stack", "&7You have sold&e [AMOUNT]&7x&e [ITEM]&7 for&e [MONEY] money&7."),
+    COMMAND_SELL_INVENTORY("Command.Sell.Inventory", "&7You have sold&e [AMOUNT]&7x&e [ITEM]&7 for&e [MONEY] money&7."),
+    COMMAND_SELL_LOGGER_ONE("Command.Sell.Logger.One", "&7[PLAYER] has sold&e one [ITEM]&7 and got&e [MONEY] money&7 for it!"),
+    COMMAND_SELL_LOGGER_STACK("Command.Sell.Logger.Stack", "&7[PLAYER] has sold&e [AMOUNT]&7x&e [ITEM]&7 and got&e [MONEY] money&7 for it!"),
+    COMMAND_SELL_LOGGER_INVENTORY("Command.Sell.Logger.Inventory", "&7[PLAYER] has sold&e [AMOUNT]&7x&e [ITEM]&7 and got&e [MONEY] money&7 for it!"),;
     public static final Messages[] VALUES = values();
 
     private final String path;

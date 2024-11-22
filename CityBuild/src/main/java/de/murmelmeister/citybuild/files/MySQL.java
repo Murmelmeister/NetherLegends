@@ -1,5 +1,6 @@
 package de.murmelmeister.citybuild.files;
 
+import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.murmelapi.utils.Database;
 import de.murmelmeister.murmelapi.utils.FileUtil;
 import org.slf4j.Logger;
@@ -9,8 +10,8 @@ import java.io.File;
 public final class MySQL {
     private final File file;
 
-    public MySQL(Logger logger) {
-        this.file = FileUtil.createFile(logger, "./MurmelProperties", "mysql.properties");
+    public MySQL(Logger logger, ConfigFile configFile) {
+        this.file = FileUtil.createFile(logger, configFile.getString(Configs.MURMEL_API_CONFIG_PATH), configFile.getString(Configs.MURMEL_API_CONFIG_FILE));
     }
 
     public void connect() {

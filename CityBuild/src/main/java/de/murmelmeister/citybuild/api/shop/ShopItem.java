@@ -1,6 +1,7 @@
 package de.murmelmeister.citybuild.api.shop;
 
 import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.api.CustomItems;
 import de.murmelmeister.citybuild.api.Economy;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
@@ -21,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ShopItem {
-    public ShopItem() {
+    private final CustomItems customItems;
+
+    public ShopItem(CustomItems customItems) {
+        this.customItems = customItems;
         String tableName = "ShopItems";
         createTable(tableName);
         Procedure.loadAll(tableName);
@@ -31,68 +35,59 @@ public final class ShopItem {
      * ItemId soll zu mehreren Kategorien gehören können
      */
     private void createTable(String tableName) {
-        Database.createTable(tableName, "CategoryID VARCHAR(255), ItemID VARCHAR(255), PRIMARY KEY (CategoryID, ItemID), DisplayName TINYTEXT, Material TINYTEXT, BuyPrice DOUBLE, SellPrice DOUBLE");
+        Database.createTable(tableName, "ItemID VARCHAR(255) PRIMARY KEY, CategoryID VARCHAR(255), BuyPrice DOUBLE, SellPrice DOUBLE");
     }
 
-    public boolean existItem(String categoryId, String itemId) {
-        return Database.callExists(Procedure.ITEMS_GET.getName(), categoryId, itemId);
+    public boolean existItem(String itemId) {
+        return Database.callExists(Procedure.ITEMS_GET.getName(), itemId);
     }
 
-    public void addItem(String categoryId, String itemId, String displayName, Material material, double buy, double sell) {
-        if (categoryId.length() > 255)
-            throw new IllegalArgumentException("CategoryID is too long. Max length is 255 characters");
+    public void addItem(String itemId, String categoryId, double buy, double sell) {
         if (itemId.length() > 255)
             throw new IllegalArgumentException("ItemID is too long. Max length is 255 characters");
-        if (displayName.length() > 255)
-            throw new IllegalArgumentException("DisplayName is too long. Max length is 255 characters");
-        if (material.name().length() > 255)
-            throw new IllegalArgumentException("Material is too long. Max length is 255 characters");
-        Database.callUpdate(Procedure.ITEMS_CREATE.getName(), categoryId, itemId, displayName, material.name(), buy, sell);
+        if (categoryId.length() > 255)
+            throw new IllegalArgumentException("CategoryID is too long. Max length is 255 characters");
+        Database.callUpdate(Procedure.ITEMS_CREATE.getName(), itemId, categoryId, buy, sell);
     }
 
-    public void removeItem(String categoryId, String itemId) {
-        Database.callUpdate(Procedure.ITEMS_DELETE.getName(), categoryId, itemId);
+    public void removeItem(String itemId) {
+        Database.callUpdate(Procedure.ITEMS_DELETE.getName(), itemId);
     }
 
     public void removeCategoryItems(String categoryId) {
         Database.callUpdate(Procedure.ITEMS_DELETE_CATEGORY_ITEMS.getName(), categoryId);
     }
 
-    public Material getMaterial(String categoryId, String itemId) {
-        String material = Database.callQuery(null, "Material", String.class, Procedure.ITEMS_GET.getName(), categoryId, itemId);
-        return material == null ? null : Material.getMaterial(material);
+    public double getBuyPrice(String itemId) {
+        return Database.callQuery(0.0D, "BuyPrice", double.class, Procedure.ITEMS_GET.getName(), itemId);
     }
 
-    public String getDisplayName(String categoryId, String itemId) {
-        return Database.callQuery(null, "DisplayName", String.class, Procedure.ITEMS_GET.getName(), categoryId, itemId);
+    public double getSellPrice(String itemId) {
+        return Database.callQuery(0.0D, "SellPrice", double.class, Procedure.ITEMS_GET.getName(), itemId);
     }
 
-    public double getBuyPrice(String categoryId, String itemId) {
-        return Database.callQuery(0.0D, "BuyPrice", double.class, Procedure.ITEMS_GET.getName(), categoryId, itemId);
-    }
-
-    public double getSellPrice(String categoryId, String itemId) {
-        return Database.callQuery(0.0D, "SellPrice", double.class, Procedure.ITEMS_GET.getName(), categoryId, itemId);
+    public Material getMaterial(String itemId) {
+        return !existItem(itemId) ? null : customItems.getMaterial(itemId);
     }
 
     public ItemStack getItemStack(Material material, int amount) {
         return new ItemStack(material, amount);
     }
 
-    public ItemStack getIcon(ConfigFile configFile, MessageFile messageFile, Economy economy, int userId, String categoryId, String itemId) {
-        Material material = getMaterial(categoryId, itemId);
+    public ItemStack getIcon(ConfigFile configFile, MessageFile messageFile, Economy economy, int userId, String itemId) {
+        Material material = getMaterial(itemId);
         if (material == null) return null;
         DecimalFormat decimalFormat = new DecimalFormat(configFile.getString(Configs.PATTERN_DECIMAL));
         int maxStackSize = material.getMaxStackSize();
-        double buy = getBuyPrice(categoryId, itemId);
-        double sell = getSellPrice(categoryId, itemId);
+        double buy = getBuyPrice(itemId);
+        double sell = getSellPrice(itemId);
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
         container.set(CityBuild.getKeyShopItem(), PersistentDataType.BOOLEAN, true);
 
-        itemMeta.displayName(MiniMessage.miniMessage().deserialize(getDisplayName(categoryId, itemId)));
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(customItems.getDisplayName(itemId)));
 
         List<Component> lore = new ArrayList<>();
         lore.add(MiniMessage.miniMessage().deserialize(" "));
@@ -131,27 +126,23 @@ public final class ShopItem {
         return Database.callQueryList("ItemID", String.class, Procedure.ITEMS_GET_CATEGORY_ITEMS.getName(), categoryId);
     }
 
-    public void updateItem(String categoryId, String itemId, String displayName, Material material, double buy, double sell) {
-        if (categoryId.length() > 255)
-            throw new IllegalArgumentException("CategoryID is too long. Max length is 255 characters");
+    public void updateItem(String itemId, String categoryId, double buy, double sell) {
         if (itemId.length() > 255)
             throw new IllegalArgumentException("ItemID is too long. Max length is 255 characters");
-        if (displayName.length() > 255)
-            throw new IllegalArgumentException("DisplayName is too long. Max length is 255 characters");
-        if (material.name().length() > 255)
-            throw new IllegalArgumentException("Material is too long. Max length is 255 characters");
-        Database.callUpdate(Procedure.ITEMS_UPDATE.getName(), categoryId, itemId, displayName, material.name(), buy, sell);
+        if (categoryId.length() > 255)
+            throw new IllegalArgumentException("CategoryID is too long. Max length is 255 characters");
+        Database.callUpdate(Procedure.ITEMS_UPDATE.getName(), itemId, categoryId, buy, sell);
     }
 
     private enum Procedure {
-        ITEMS_CREATE("Shop_Items_Create", "cid VARCHAR(255), item VARCHAR(255), display TINYTEXT, mat TINYTEXT, buy DOUBLE, sell DOUBLE",
-                "INSERT INTO [TABLE] VALUES (cid, item, display, mat, buy, sell);"),
-        ITEMS_DELETE("Shop_Items_Delete", "cid VARCHAR(255), item VARCHAR(255)", "DELETE FROM [TABLE] WHERE CategoryID=cid AND ItemID=item;"),
+        ITEMS_CREATE("Shop_Items_Create", "item VARCHAR(255), cid VARCHAR(255), buy DOUBLE, sell DOUBLE",
+                "INSERT INTO [TABLE] VALUES (item, cid, buy, sell);"),
+        ITEMS_DELETE("Shop_Items_Delete", "item VARCHAR(255)", "DELETE FROM [TABLE] WHERE ItemID=item;"),
         ITEMS_DELETE_CATEGORY_ITEMS("Shop_Items_DeleteCategoryItems", "cid VARCHAR(255)", "DELETE FROM [TABLE] WHERE CategoryID=cid;"),
-        ITEMS_GET("Shop_Items_Get", "cid VARCHAR(255), item VARCHAR(255)", "SELECT * FROM [TABLE] WHERE CategoryID=cid AND ItemID=item;"),
+        ITEMS_GET("Shop_Items_Get", "item VARCHAR(255)", "SELECT * FROM [TABLE] WHERE ItemID=item;"),
         ITEMS_GET_CATEGORY_ITEMS("Shop_Items_GetCategoryItems", "cid VARCHAR(255)", "SELECT * FROM [TABLE] WHERE CategoryID=cid;"),
-        ITEMS_UPDATE("Shop_Items_Update", "cid VARCHAR(255), item VARCHAR(255), display TINYTEXT, mat TINYTEXT, buy DOUBLE, sell DOUBLE",
-                "UPDATE [TABLE] SET DisplayName=display, Material=mat, BuyPrice=buy, SellPrice=sell WHERE CategoryID=cid AND ItemID=item;");
+        ITEMS_UPDATE("Shop_Items_Update", "item VARCHAR(255), cid VARCHAR(255), buy DOUBLE, sell DOUBLE",
+                "UPDATE [TABLE] SET CategoryID=cid, BuyPrice=buy, SellPrice=sell WHERE ItemID=item;");
         private static final Procedure[] VALUES = values();
 
         private final String name;

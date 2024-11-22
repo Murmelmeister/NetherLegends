@@ -65,7 +65,6 @@ public final class ShopMenu extends MultipleMenu<String> {
         private final MessageFile messageFile;
         private final ShopItem shopItem;
         private final Economy economy;
-        private final String categoryId;
 
         public CategoryItemMenu(Menu parent, User user, ConfigFile configFile, MessageFile messageFile, ShopCategory category, ShopItem shopItem, Economy economy, String categoryId) {
             super(parent, false, shopItem.getCategoryItems(categoryId));
@@ -74,7 +73,6 @@ public final class ShopMenu extends MultipleMenu<String> {
             this.messageFile = messageFile;
             this.shopItem = shopItem;
             this.economy = economy;
-            this.categoryId = categoryId;
             setTitle(configFile.getString(Configs.SHOP_ITEM_TITLE).replace("[CATEGORY]", category.getDisplayName(categoryId)));
             setPlaceholder(Material.getMaterial(configFile.getString(Configs.SHOP_ITEM_PLACEHOLDER)));
         }
@@ -82,16 +80,16 @@ public final class ShopMenu extends MultipleMenu<String> {
         @Override
         protected ItemStack convertToItemStack(String itemId) {
             int userId = user.getId(getViewer().getUniqueId());
-            return shopItem.getIcon(configFile, messageFile, economy, userId, categoryId, itemId);
+            return shopItem.getIcon(configFile, messageFile, economy, userId, itemId);
         }
 
         @Override
         protected void handlePageClick(Player player, String itemId, ClickType clickType) {
-            Material material = shopItem.getMaterial(categoryId, itemId);
+            Material material = shopItem.getMaterial(itemId);
             if (material == null) return;
             int maxStackSize = material.getMaxStackSize();
             int userId = user.getId(player.getUniqueId());
-            double buy = shopItem.getBuyPrice(categoryId, itemId);
+            double buy = shopItem.getBuyPrice(itemId);
             Component noMoneyMessage = MiniMessage.miniMessage().deserialize(messageFile.getString(Messages.SHOP_ITEM_MONEY_NOT_ENOUGH));
             if (clickType.isLeftClick()) {
                 if (!economy.hasEnoughMoney(userId, buy)) {

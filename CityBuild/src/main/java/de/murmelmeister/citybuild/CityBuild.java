@@ -14,6 +14,7 @@ import de.murmelmeister.citybuild.util.scoreboard.TestScoreboard;
 import de.murmelmeister.murmelapi.MurmelAPI;
 import de.murmelmeister.murmelapi.MurmelPlugin;
 import de.murmelmeister.murmelapi.user.User;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -35,6 +36,7 @@ public final class CityBuild extends MurmelPlugin {
     private ItemValue itemValue;
     private EnderChest enderChest;
     private PlayerInventory playerInventory;
+    private CustomItems customItems;
     private ShopCategory shopCategory;
     private ShopItem shopItem;
 
@@ -46,11 +48,11 @@ public final class CityBuild extends MurmelPlugin {
     @Override
     public void onLoad() {
         final Logger logger = getSLF4JLogger();
-        this.mySQL = new MySQL(logger);
+        this.config = new ConfigFile(logger);
+        this.mySQL = new MySQL(logger, config);
         mySQL.connect();
         this.listUtil = new ListUtil();
         this.playerInventory = new PlayerInventory(logger);
-        this.config = new ConfigFile(logger);
         this.message = new MessageFile(logger);
         this.cooldown = new Cooldown(logger);
         this.locations = new Locations(logger, getServer());
@@ -58,8 +60,9 @@ public final class CityBuild extends MurmelPlugin {
         this.economy = new Economy();
         this.itemValue = new ItemValue(logger, config, economy, getUser());
         this.enderChest = new EnderChest(logger, config, message);
+        this.customItems = new CustomItems();
         this.shopCategory = new ShopCategory();
-        this.shopItem = new ShopItem();
+        this.shopItem = new ShopItem(customItems);
     }
 
     @Override
@@ -76,6 +79,7 @@ public final class CityBuild extends MurmelPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        customItems.loadAllMaterials();
         ListenerManager.register(this);
         CommandManager.register(this);
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -148,6 +152,10 @@ public final class CityBuild extends MurmelPlugin {
 
     public User getUser() {
         return MurmelAPI.getUser();
+    }
+
+    public CustomItems getCustomItems() {
+        return customItems;
     }
 
     public ShopCategory getShopCategory() {

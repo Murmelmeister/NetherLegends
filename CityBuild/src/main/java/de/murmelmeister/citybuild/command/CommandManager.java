@@ -17,11 +17,11 @@ import de.murmelmeister.citybuild.command.commands.shop.item.ShopItemCommand;
 import de.murmelmeister.citybuild.command.commands.teleport.*;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import de.murmelmeister.murmelapi.user.User;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -51,6 +51,7 @@ public abstract class CommandManager implements TabExecutor {
     protected final EnderChest enderChest;
     protected final DecimalFormat decimalFormat;
     protected final PlayerInventory playerInventory;
+    protected final CustomItems customItems;
     protected final ShopCategory shopCategory;
     protected final ShopItem shopItem;
 
@@ -67,6 +68,7 @@ public abstract class CommandManager implements TabExecutor {
         this.itemValue = plugin.getItemValue();
         this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
+        this.customItems = plugin.getCustomItems();
         this.shopCategory = plugin.getShopCategory();
         this.shopItem = plugin.getShopItem();
         this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
@@ -74,8 +76,8 @@ public abstract class CommandManager implements TabExecutor {
 
     public void sendMessage(CommandSender sender, String message) {
         if (config.getBoolean(Configs.PREFIX_ENABLE))
-            sender.sendMessage(HexColor.format(this.message.prefix() + message));
-        else sender.sendMessage(HexColor.format(message));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(this.message.prefix() + message));
+        else sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
     }
 
     public boolean isEnable(CommandSender sender, Configs configs) {
