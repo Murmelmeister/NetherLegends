@@ -21,6 +21,7 @@ import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import de.murmelmeister.murmelapi.user.User;
+import de.murmelmeister.murmelapi.utils.MojangUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -31,10 +32,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.StringUtil;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public abstract class CommandManager implements TabExecutor {
@@ -106,6 +112,40 @@ public abstract class CommandManager implements TabExecutor {
             sendMessage(sender, message.getString(Messages.NO_CONSOLE));
             return false;
         } else return true;
+    }
+
+    public boolean existUser(CommandSender sender, String username) {
+        if (!user.existsUser(username)) {
+            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", username));
+            return false;
+        } else return true;
+    }
+
+    public boolean existUser(CommandSender sender, UUID uuid, String username) {
+        if (!user.existsUser(uuid)) {
+            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", username));
+            return false;
+        } else return true;
+    }
+
+    public UUID getUUID(CommandSender sender, String username) {
+        try {
+            return MojangUtils.getUUID(username);
+        } catch (IOException | URISyntaxException e) {
+            sendMessage(sender, message.getString(Messages.MOJANG_PROFILE_NOT_FOUND).replace("[USERNAME]", username));
+            return null;
+        }
+    }
+
+    public CompletableFuture<UUID> getUUIDAsync(CommandSender sender, String username) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return MojangUtils.getUUID(username);
+            } catch (IOException | URISyntaxException e) {
+                sendMessage(sender, message.getString(Messages.MOJANG_PROFILE_NOT_FOUND).replace("[USERNAME]", username));
+                return null;
+            }
+        });
     }
 
     public List<String> tabCompletePlayers(CommandSender sender, String[] args) {

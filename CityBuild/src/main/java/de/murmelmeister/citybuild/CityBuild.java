@@ -58,7 +58,7 @@ public final class CityBuild extends MurmelPlugin {
         this.cooldown = new Cooldown(logger);
         this.locations = new Locations(logger, getServer());
         this.homes = new Homes();
-        this.economy = new Economy();
+        this.economy = new Economy(config);
         this.enderChest = new EnderChest(logger, config, message);
         this.customItems = new CustomItems();
         this.shopCategory = new ShopCategory();

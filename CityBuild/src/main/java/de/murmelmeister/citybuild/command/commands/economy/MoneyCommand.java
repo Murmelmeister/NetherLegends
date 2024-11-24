@@ -4,7 +4,6 @@ import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MoneyCommand extends CommandManager {
+public final class MoneyCommand extends CommandManager {
     public MoneyCommand(CityBuild plugin) {
         super(plugin);
     }
@@ -34,27 +33,28 @@ public class MoneyCommand extends CommandManager {
         if (args.length == 0) {
             if (!(isEnable(sender, Configs.COMMAND_ENABLE_MONEY_USE))) return true;
             if (!(hasPermission(sender, Configs.PERMISSION_MONEY_USE))) return true;
-            sendMessage(player, message.getString(Messages.COMMAND_MONEY_USE).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId))));
+            sendMessage(player, message.getString(Messages.COMMAND_MONEY_USE)
+                    .replace("[MONEY]", economy.getFormattedMoney(userId)));
         } else if (args.length == 1) {
             if (!(isEnable(sender, Configs.COMMAND_ENABLE_MONEY_OTHER))) return true;
             if (!(hasPermission(sender, Configs.PERMISSION_MONEY_OTHER))) return true;
-            String targetName = args[0];
-            OfflinePlayer target = sender.getServer().getOfflinePlayer(targetName);
 
-            int targetId = user.getId(target.getUniqueId());
-            if (targetId == -2) {
-                sendMessage(player, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", targetName));
-                return true;
-            }
+            String target = args[0];
+            getUUIDAsync(sender, target).thenAccept(uuid -> {
+                if (uuid == null) return;
+                if (!existUser(sender, uuid, target)) return;
+                int targetId = user.getId(uuid);
 
-            sendMessage(player, message.getString(Messages.COMMAND_MONEY_OTHER).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
-                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(targetId))).replace("[PLAYER]", targetName));
+                sendMessage(player, message.getString(Messages.COMMAND_MONEY_OTHER)
+                        .replace("[MONEY]", economy.getFormattedMoney(targetId))
+                        .replace("[PLAYER]", target));
+            });
         } else sendMessage(sender, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return tabCompleteOfflinePlayers(sender, args, 1);
+        return tabComplete(user.getUsernames(), args, 1);
     }
 }

@@ -1,13 +1,18 @@
 package de.murmelmeister.citybuild.api;
 
+import de.murmelmeister.citybuild.files.ConfigFile;
+import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.murmelapi.utils.Database;
 
+import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
-public class Economy {
+public final class Economy {
     public static final Pattern MONEY_PATTERN = Pattern.compile("^\\d+(\\.\\d{1,2})?$");
+    private final ConfigFile configFile;
 
-    public Economy() {
+    public Economy(ConfigFile configFile) {
+        this.configFile = configFile;
         String tableName = "CB_Economy";
         createTable(tableName);
         Procedure.loadAll(tableName);
@@ -23,7 +28,7 @@ public class Economy {
 
     public void createUser(int userId) {
         if (existUser(userId)) return;
-        Database.callUpdate(Procedure.ECONOMY_CREATE_USER.getName(), userId, 0, 0);
+        Database.callUpdate(Procedure.ECONOMY_CREATE_USER.getName(), userId, configFile.getDouble(Configs.ECONOMY_DEFAULT_MONEY), 0);
     }
 
     public void deleteUser(int userId) {
@@ -36,6 +41,14 @@ public class Economy {
 
     public double getBankMoney(int userId) {
         return Database.callQuery(0.0D, "BankMoney", double.class, Procedure.ECONOMY_GET_USER.getName(), userId);
+    }
+
+    public String getFormattedMoney(int userId) {
+        return new DecimalFormat(configFile.getString(Configs.PATTERN_DECIMAL)).format(getMoney(userId));
+    }
+
+    public String getFormattedBankMoney(int userId) {
+        return new DecimalFormat(configFile.getString(Configs.PATTERN_DECIMAL)).format(getBankMoney(userId));
     }
 
     public void setMoney(int userId, double amount) {
@@ -71,7 +84,7 @@ public class Economy {
     }
 
     public void resetMoney(int userId) {
-        setMoney(userId, 0);
+        setMoney(userId, configFile.getDouble(Configs.ECONOMY_DEFAULT_MONEY));
     }
 
     public void resetBankMoney(int userId) {
@@ -86,18 +99,32 @@ public class Economy {
         return money <= getBankMoney(userId);
     }
 
-    public void payMoneyToPlayer(int userId, int targetId, double money) {
-        if (hasEnoughMoney(userId, money)) {
-            removeMoney(userId, money);
-            addMoney(targetId, money);
-        }
+    public void transferMoney(int userId, int targetId, double money) {
+        removeMoney(userId, money);
+        addMoney(targetId, money);
     }
 
-    public void payMoneyToBank(int userId, double money) {
+    public boolean checkAndTransferMoney(int userId, int targetId, double money) {
+        if (hasEnoughMoney(userId, money)) {
+            transferMoney(userId, targetId, money);
+            return true;
+        } else return false;
+    }
+
+    public boolean transferMoneyToBank(int userId, double money) {
         if (hasEnoughMoney(userId, money)) {
             removeMoney(userId, money);
             addBankMoney(userId, money);
-        }
+            return true;
+        } else return false;
+    }
+
+    public boolean transferBankMoneyToPlayer(int userId, double money) {
+        if (hasEnoughBankMoney(userId, money)) {
+            removeBankMoney(userId, money);
+            addMoney(userId, money);
+            return true;
+        } else return false;
     }
 
     private enum Procedure {

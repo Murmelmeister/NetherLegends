@@ -29,12 +29,9 @@ public final class BankCommand extends CommandManager {
         int userId = user.getId(player.getUniqueId());
 
         switch (args.length) {
-            case 0 -> {
-                sendMessage(player, "<gray>Current money: <aqua>" + decimalFormat.format(economy.getMoney(userId)));
-                sendMessage(player, "<gray>Current bank money: <aqua>" + decimalFormat.format(economy.getBankMoney(userId)));
-                sendMessage(player, "<aqua>/bank deposit <amount> <gray>- Deposit money to your bank account");
-                sendMessage(player, "<aqua>/bank withdraw <amount> <gray>- Withdraw money from your bank account");
-            }
+            case 0 -> sendMessage(player, message.getString(Messages.BANK_USAGE)
+                    .replace("[MONEY]", economy.getFormattedMoney(userId))
+                    .replace("[BANK]", economy.getFormattedBankMoney(userId)));
             case 2 -> {
                 String input = args[1];
                 if (!Economy.MONEY_PATTERN.matcher(input).matches()) {
@@ -45,27 +42,21 @@ public final class BankCommand extends CommandManager {
                 double amount = Double.parseDouble(input);
                 switch (args[0]) {
                     case "deposit" -> {
-                        if (economy.hasEnoughMoney(userId, amount)) {
-                            economy.removeMoney(userId, amount);
-                            economy.addBankMoney(userId, amount);
-                            sendMessage(player, "<green>You have successfully deposited " + decimalFormat.format(amount) + " money.");
-                        } else {
-                            sendMessage(player, "<red>You don't have enough money.");
-                        }
+                        if (economy.transferMoneyToBank(userId, amount))
+                            sendMessage(player, message.getString(Messages.BANK_DEPOSIT).replace("[MONEY]", decimalFormat.format(amount)));
+                        else sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH));
                     }
                     case "withdraw" -> {
-                        if (economy.hasEnoughBankMoney(userId, amount)) {
-                            economy.removeBankMoney(userId, amount);
-                            economy.addMoney(userId, amount);
-                            sendMessage(player, "<green>You have successfully withdrawn " + decimalFormat.format(amount) + " money.");
-                        } else {
-                            sendMessage(player, "<red>You don't have enough money in your bank account.");
-                        }
+                        if (economy.transferBankMoneyToPlayer(userId, amount))
+                            sendMessage(player, message.getString(Messages.BANK_WITHDRAW).replace("[MONEY]", decimalFormat.format(amount)));
+                        else sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH));
                     }
-                    default -> sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
+                    default ->
+                            sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
                 }
             }
-            default -> sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
+            default ->
+                    sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
         }
         return true;
     }

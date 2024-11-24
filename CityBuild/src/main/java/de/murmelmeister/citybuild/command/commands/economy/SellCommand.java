@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class SellCommand extends CommandManager {
+public final class SellCommand extends CommandManager {
     public SellCommand(CityBuild plugin) {
         super(plugin);
     }
@@ -135,6 +135,6 @@ public class SellCommand extends CommandManager {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return tabComplete(Arrays.asList("show", "one", "stack", "inventory"), args);
+        return tabComplete(Arrays.asList("show", "one", "stack", "inventory"), args, 1);
     }
 }

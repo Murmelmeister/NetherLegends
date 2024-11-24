@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PayCommand extends CommandManager {
+public final class PayCommand extends CommandManager {
     public PayCommand(CityBuild plugin) {
         super(plugin);
     }
@@ -29,35 +29,45 @@ public class PayCommand extends CommandManager {
         Player player = getPlayer(sender);
         if (!(existPlayer(sender))) return true;
 
-        int userId = user.createOrGetUser(player.getUniqueId());
+        int userId = user.getId(player.getUniqueId());
 
         if (args.length != 2) {
             sendMessage(player, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
             return true;
         }
 
-        if (args[0].equals("*")) {
+        String username = args[0];
+        String amount = args[1];
+
+        if (!Economy.MONEY_PATTERN.matcher(amount).matches()) {
+            sendMessage(player, message.getString(Messages.INVALID_NUMBERS));
+            return true;
+        }
+
+        double money = Double.parseDouble(amount);
+
+        if (username.equals("*")) {
             if (!(hasPermission(sender, Configs.PERMISSION_PAY_ALL_PLAYERS))) return true;
 
-            if (args[1].equals("*")) {
+            if (amount.equals("*")) {
                 sendMessage(player, message.getString(Messages.COMMAND_PAY_ALL));
                 return true;
             }
 
-            payAllPlayers(player, userId, args[1]);
+            payAllPlayers(player, userId, money);
             return true;
         }
 
-        Player target = sender.getServer().getPlayer(args[0]);
+        Player target = sender.getServer().getPlayer(username);
         if (target == null) {
-            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
+            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", username));
             return true;
         }
 
         int targetId = user.getId(target.getUniqueId());
 
         if (targetId == -2) {
-            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
+            sendMessage(sender, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", username));
             return true;
         }
 
@@ -66,7 +76,7 @@ public class PayCommand extends CommandManager {
             return true;
         }
 
-        payPlayerMoney(player, target, userId, targetId, args[1]);
+        payPlayerMoney(player, target, userId, targetId, money);
         return true;
     }
 
@@ -75,55 +85,40 @@ public class PayCommand extends CommandManager {
         return tabCompletePlayers(sender, args, 1);
     }
 
-    private void payAllPlayers(Player player, int userId, String args) {
-        if (!Economy.MONEY_PATTERN.matcher(args).matches()) {
-            sendMessage(player, message.getString(Messages.INVALID_NUMBERS));
-            return;
-        }
-
-        double money = Double.parseDouble(args);
-
+    private void payAllPlayers(Player player, int userId, double money) {
         if (!(economy.hasEnoughMoney(userId, money))) {
-            sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
+            sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH));
             return;
         }
 
         for (Player all : player.getServer().getOnlinePlayers()) {
+            if (all.equals(player)) continue;
             int allIds = user.getId(all.getUniqueId());
             if (allIds == -2) continue;
-            economy.payMoneyToPlayer(userId, allIds, money);
-            sendMessage(all, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-
+            if (economy.checkAndTransferMoney(userId, allIds, money)) {
+                sendMessage(all, message.getString(Messages.COMMAND_PAY_TARGET)
+                        .replace("[PLAYER]", player.getName())
+                        .replace("[MONEY]", decimalFormat.format(money)));
+            } else sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH));
         }
 
-        sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", "all").replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
+        sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", "all").replace("[MONEY]", decimalFormat.format(money)));
     }
 
     private void payAllMoney(Player player, Player target, int userId, int targetId) {
         if (!(hasPermission(player, Configs.PERMISSION_PAY_ALL_MONEY))) return;
 
         double allMoney = economy.getMoney(userId);
+        economy.transferMoney(userId, targetId, allMoney);
 
-        economy.payMoneyToPlayer(userId, targetId, allMoney);
-        sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(allMoney)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-        sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(allMoney)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
+        sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(allMoney)));
+        sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(allMoney)));
     }
 
-    private void payPlayerMoney(Player player, Player target, int userId, int targetId, String args) {
-        if (!Economy.MONEY_PATTERN.matcher(args).matches()) {
-            sendMessage(player, message.getString(Messages.INVALID_NUMBERS));
-            return;
-        }
-
-        double money = Double.parseDouble(args);
-
-        if (!(economy.hasEnoughMoney(userId, money))) {
-            sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-            return;
-        }
-
-        economy.payMoneyToPlayer(userId, targetId, money);
-        sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
-        sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(money)).replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)));
+    private void payPlayerMoney(Player player, Player target, int userId, int targetId, double money) {
+        if (economy.checkAndTransferMoney(userId, targetId, money)) {
+            sendMessage(target, message.getString(Messages.COMMAND_PAY_TARGET).replace("[PLAYER]", player.getName()).replace("[MONEY]", decimalFormat.format(money)));
+            sendMessage(player, message.getString(Messages.COMMAND_PAY_PLAYER).replace("[PLAYER]", target.getName()).replace("[MONEY]", decimalFormat.format(money)));
+        } else sendMessage(player, message.getString(Messages.COMMAND_PAY_MONEY_ENOUGH));
     }
 }
