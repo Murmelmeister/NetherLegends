@@ -63,12 +63,8 @@ public class ConnectListener extends ListenerManager {
         }
         player.updateCommands();
 
-        if (playerInventory.existInventory(userId)) {
-            player.getInventory().setContents(playerInventory.getContents(userId));
-            player.getInventory().setStorageContents(playerInventory.getStorageContents(userId));
-        } else {
-            playerInventory.createInventory(userId, player.getInventory());
-        }
+        if (playerInventory.existInventory(userId)) playerInventory.setInventory(userId, player);
+        else playerInventory.createOrUpdateInventory(userId, player, false);
     }
 
     @EventHandler
@@ -85,6 +81,6 @@ public class ConnectListener extends ListenerManager {
         listUtil.getGodMode().remove(player.getUniqueId());
         listUtil.getLive().remove(player.getUniqueId());
         int userId = user.getId(player.getUniqueId());
-        playerInventory.updateInventory(userId, player.getInventory());
+        playerInventory.createOrUpdateInventory(userId, player, true);
     }
 }
