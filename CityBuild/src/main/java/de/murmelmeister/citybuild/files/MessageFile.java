@@ -2,7 +2,6 @@ package de.murmelmeister.citybuild.files;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.util.FileUtil;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Messages;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class MessageFile {
     }
 
     public String getString(Messages messages) {
-        return config.getString(HexColor.format(messages.getPath()));
+        return config.getString(messages.getPath());
     }
 
     public String prefix() {

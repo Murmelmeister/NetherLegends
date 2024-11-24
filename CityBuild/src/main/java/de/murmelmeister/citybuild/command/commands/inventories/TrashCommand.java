@@ -2,9 +2,9 @@ package de.murmelmeister.citybuild.command.commands.inventories;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,7 +31,7 @@ public class TrashCommand extends CommandManager {
         Player player = getPlayer(sender);
         if (!(existPlayer(sender))) return true;
 
-        Inventory trash = player.getServer().createInventory(null, 5 * 9, HexColor.format(message.getString(Messages.INVENTORY_TRASH)));
+        Inventory trash = player.getServer().createInventory(null, 5 * 9, MiniMessage.miniMessage().deserialize(message.getString(Messages.INVENTORY_TRASH)));
         player.openInventory(trash);
         return true;
     }

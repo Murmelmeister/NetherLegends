@@ -2,9 +2,10 @@ package de.murmelmeister.citybuild.listener.listeners;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.listener.ListenerManager;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -15,7 +16,6 @@ public class ConnectListener extends ListenerManager {
         super(plugin);
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -23,11 +23,11 @@ public class ConnectListener extends ListenerManager {
         if (config.getBoolean(Configs.EVENT_ENABLE_PLAYER_JOIN))
             if (player.canSee(player)) // Maybe unnecessary, but if someone is in vanish you should not see the message
                 if (config.getBoolean(Configs.PREFIX_ENABLE))
-                    event.setJoinMessage(HexColor.format(message.prefix() + message.getString(Messages.EVENT_PLAYER_JOIN).replace("[PLAYER]", player.getName())));
+                    event.joinMessage(MiniMessage.miniMessage().deserialize(message.prefix() + message.getString(Messages.EVENT_PLAYER_JOIN).replace("[PLAYER]", player.getName())));
                 else
-                    event.setJoinMessage(HexColor.format(message.getString(Messages.EVENT_PLAYER_JOIN).replace("[PLAYER]", player.getName())));
-            else event.setJoinMessage(null);
-        else event.setJoinMessage(null);
+                    event.joinMessage(MiniMessage.miniMessage().deserialize(message.getString(Messages.EVENT_PLAYER_JOIN).replace("[PLAYER]", player.getName())));
+            else event.joinMessage(null);
+        else event.joinMessage(null);
 
         if (locations.isSpawnExist()) {
             if (config.getBoolean(Configs.EVENT_ENABLE_TELEPORT_TO_SPAWN))
@@ -55,28 +55,36 @@ public class ConnectListener extends ListenerManager {
         }
 
         if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_MESSAGE))
-            player.sendMessage(HexColor.format(message.getString(Messages.EVENT_JOIN_MESSAGE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
-        if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_TITLE))
-            player.sendTitle(HexColor.format(message.getString(Messages.EVENT_JOIN_TITLE)).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName()),
-                    HexColor.format(message.getString(Messages.EVENT_JOIN_SUB_TITLE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
-
+            sendMessage(player, message.getString(Messages.EVENT_JOIN_MESSAGE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName()));
+        if (config.getBoolean(Configs.EVENT_ENABLE_JOIN_TITLE)) {
+            Title title = Title.title(MiniMessage.miniMessage().deserialize(message.getString(Messages.EVENT_JOIN_TITLE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())),
+                    MiniMessage.miniMessage().deserialize(message.getString(Messages.EVENT_JOIN_SUB_TITLE).replace("[PREFIX]", message.prefix()).replace("[PLAYER]", player.getName())));
+            player.showTitle(title);
+        }
         player.updateCommands();
+
+        if (playerInventory.existInventory(userId)) {
+            player.getInventory().setContents(playerInventory.getContents(userId));
+            player.getInventory().setStorageContents(playerInventory.getStorageContents(userId));
+        } else {
+            playerInventory.createInventory(userId, player.getInventory());
+        }
     }
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void handlePlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (config.getBoolean(Configs.EVENT_ENABLE_PLAYER_QUIT))
             if (player.canSee(player)) // Maybe unnecessary, but if someone is in vanish you should not see the message
                 if (config.getBoolean(Configs.PREFIX_ENABLE))
-                    event.setQuitMessage(HexColor.format(message.prefix() + message.getString(Messages.EVENT_PLAYER_QUIT).replace("[PLAYER]", player.getName())));
+                    event.quitMessage(MiniMessage.miniMessage().deserialize(message.prefix() + message.getString(Messages.EVENT_PLAYER_QUIT).replace("[PLAYER]", player.getName())));
                 else
-                    event.setQuitMessage(HexColor.format(message.getString(Messages.EVENT_PLAYER_QUIT).replace("[PLAYER]", player.getName())));
-            else event.setQuitMessage(null);
-        else event.setQuitMessage(null);
+                    event.quitMessage(MiniMessage.miniMessage().deserialize(message.getString(Messages.EVENT_PLAYER_QUIT).replace("[PLAYER]", player.getName())));
+            else event.quitMessage(null);
+        else event.quitMessage(null);
         listUtil.getGodMode().remove(player.getUniqueId());
         listUtil.getLive().remove(player.getUniqueId());
-        playerInventory.savePlayerInventory(player.getUniqueId(), player.getInventory());
+        int userId = user.getId(player.getUniqueId());
+        playerInventory.updateInventory(userId, player.getInventory());
     }
 }

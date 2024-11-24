@@ -4,9 +4,9 @@ import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.util.FileUtil;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,6 +28,7 @@ public class EnderChest extends PlayerInventoryLoader {
     private Player target; // TODO: removed
     private OfflinePlayer offlineTarget; // TODO: removed
     private List<UUID> uuids;
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     // TODO: Add a List<String> playerList
     // Bug: Wenn zwei Invs offen sind und einer geschlossen wird, überschreibt den inv auf dem anderem
@@ -56,41 +57,41 @@ public class EnderChest extends PlayerInventoryLoader {
     }
 
     public void createEnderChestGUI(Player player) {
-        Inventory inventory = player.getServer().createInventory(null, 9, HexColor.format(message.getString(Messages.ENDER_CHEST_MENU_USE)));
+        Inventory inventory = player.getServer().createInventory(null, 9, miniMessage.deserialize(message.getString(Messages.ENDER_CHEST_MENU_USE)));
         for (int i = 1; i < 10; i++)
             if (player.hasPermission(defaultConfig.getString(Configs.PERMISSION_ENDER_CHEST_SLOTS) + "." + i))
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i)));
             else
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED)));
         player.openInventory(inventory);
     }
 
     public void createEnderChestGUI(Player player, Player target) {
         setTarget(target);
-        Inventory inventory = player.getServer().createInventory(null, 9, HexColor.format(message.getString(Messages.ENDER_CHEST_MENU_OTHER).replace("[PLAYER]", target.getName())));
+        Inventory inventory = player.getServer().createInventory(null, 9, miniMessage.deserialize((message.getString(Messages.ENDER_CHEST_MENU_OTHER).replace("[PLAYER]", target.getName()))));
         for (int i = 1; i < 10; i++)
             if (target.hasPermission(defaultConfig.getString(Configs.PERMISSION_ENDER_CHEST_SLOTS) + "." + i))
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i)));
             else
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED)));
         player.openInventory(inventory);
     }
 
     public void createEnderChestGUI(Player player, OfflinePlayer target) {
         setOfflineTarget(target);
-        Inventory inventory = player.getServer().createInventory(null, 9, HexColor.format(message.getString(Messages.ENDER_CHEST_MENU_OTHER).replace("[PLAYER]", target.getName())));
+        Inventory inventory = player.getServer().createInventory(null, 9, miniMessage.deserialize((message.getString(Messages.ENDER_CHEST_MENU_OTHER).replace("[PLAYER]", target.getName()))));
         for (int i = 1; i < 10; i++)
             if (hasAccess(target.getUniqueId(), i))
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_UNLOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_UNLOCKED).replace("[SLOT]", "" + i)));
             else
-                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), HexColor.format(message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED))));
+                inventory.setItem(i - 1, createItem(Material.matchMaterial(defaultConfig.getString(Configs.ENDER_CHEST_MATERIAL_LOCKED)), message.getString(Messages.ENDER_CHEST_MATERIAL_LOCKED)));
         player.openInventory(inventory);
     }
 
     private ItemStack createItem(Material material, String displayName) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(displayName);
+        itemMeta.displayName(miniMessage.deserialize(displayName));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

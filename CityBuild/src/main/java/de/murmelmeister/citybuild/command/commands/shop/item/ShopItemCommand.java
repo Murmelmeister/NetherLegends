@@ -23,6 +23,12 @@ public final class ShopItemCommand extends CommandManager {
         if (!isEnable(sender, Configs.COMMAND_ENABLE_SHOP_ITEM)) return true;
         if (!hasPermission(sender, Configs.PERMISSION_SHOP_ITEM)) return true;
 
+        if (args.length == 1 && args[0].equals("import")) {
+            shopItem.importItems(logger, config);
+            sendMessage(sender, message.getString(Messages.SHOP_ITEM_IMPORT).replace("[FILE]", config.getString(Configs.IMPORT_DATA_SHOP_ITEMS)));
+            return true;
+        }
+
         if (args.length < 3) {
             sendMessage(sender, message.getString(Messages.COMMAND_SYNTAX).replace("[USAGE]", command.getUsage()));
             return true;
@@ -43,7 +49,7 @@ public final class ShopItemCommand extends CommandManager {
     @Override
     public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1)
-            return tabComplete(Arrays.asList("add", "remove", "edit"), args);
+            return tabComplete(Arrays.asList("add", "remove", "edit", "import"), args);
         if (args.length == 2)
             return tabComplete(shopCategory.getCategories(), args);
         if (args.length == 3 && args[0].equals("add"))

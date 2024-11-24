@@ -16,7 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.slf4j.Logger;
 
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,35 @@ public final class ShopItem {
         if (categoryId.length() > 255)
             throw new IllegalArgumentException("CategoryID is too long. Max length is 255 characters");
         Database.callUpdate(Procedure.ITEMS_CREATE.getName(), itemId, categoryId, buy, sell);
+    }
+
+    public void importItems(Logger logger, ConfigFile config) {
+        String filePath = CityBuild.getMainPath() + config.getString(Configs.IMPORT_PATH) + config.getString(Configs.IMPORT_DATA_SHOP_ITEMS);
+        File file = new File(filePath);
+        logger.info("Importing items from file: {}", file.getName());
+        if (!file.exists()) {
+            logger.error("File not found: {}", file.getName());
+            return;
+        }
+
+        logger.info("Reading file: {}", file.getName());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 4) {
+                    String itemId = data[0].trim();
+                    String categoryId = data[1].trim();
+                    double buy = Double.parseDouble(data[2].trim());
+                    double sell = Double.parseDouble(data[3].trim());
+                    if (existItem(itemId)) updateItem(itemId, categoryId, buy, sell);
+                    else addItem(itemId, categoryId, buy, sell);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Error while reading file: {}", file.getName(), e);
+        }
+        logger.info("Importing items from file: {} finished", file.getName());
     }
 
     public void removeItem(String itemId) {

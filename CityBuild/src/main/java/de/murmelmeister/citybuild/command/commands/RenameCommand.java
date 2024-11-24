@@ -2,9 +2,9 @@ package de.murmelmeister.citybuild.command.commands;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -72,7 +72,7 @@ public class RenameCommand extends CommandManager {
 
     private ItemStack createItem(ItemStack itemStack, String displayName) {
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(HexColor.format(displayName));
+        itemMeta.displayName(MiniMessage.miniMessage().deserialize(displayName));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

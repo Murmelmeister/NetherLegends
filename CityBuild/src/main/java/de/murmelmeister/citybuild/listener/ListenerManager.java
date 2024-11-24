@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.text.DecimalFormat;
+
 public class ListenerManager implements Listener {
     protected final CityBuild plugin;
     protected final ListUtil listUtil;
@@ -25,9 +27,9 @@ public class ListenerManager implements Listener {
     protected final Locations locations;
     protected final Homes homes;
     protected final Economy economy;
-    protected final ItemValue itemValue;
     protected final EnderChest enderChest;
     protected final PlayerInventory playerInventory;
+    protected final DecimalFormat decimalFormat;
 
     public ListenerManager(CityBuild plugin) {
         this.plugin = plugin;
@@ -39,9 +41,9 @@ public class ListenerManager implements Listener {
         this.locations = plugin.getLocations();
         this.homes = plugin.getHomes();
         this.economy = plugin.getEconomy();
-        this.itemValue = plugin.getItemValue();
         this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
+        this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
     }
 
     public static void register(CityBuild plugin) {

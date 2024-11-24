@@ -1,5 +1,6 @@
 package de.murmelmeister.citybuild.api;
 
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,7 +63,7 @@ public abstract class PlayerInventoryLoader {
         String path = "Inventory." + slot;
         String contents = getString(path + ".Contents");
         String storageContents = getString(path + ".StorageContents");
-        Inventory inventory = player.getServer().createInventory(null, size, title);
+        Inventory inventory = player.getServer().createInventory(null, size, MiniMessage.miniMessage().deserialize(title));
         if (contents != null) inventory.setContents(loadItemStackArray(contents));
         if (storageContents != null) inventory.setStorageContents(loadItemStackArray(storageContents));
         return inventory;
@@ -73,7 +74,7 @@ public abstract class PlayerInventoryLoader {
         String path = "Inventory." + slot;
         String contents = getString(path + ".Contents");
         String storageContents = getString(path + ".StorageContents");
-        Inventory inventory = server.createInventory(null, size, title);
+        Inventory inventory = server.createInventory(null, size, MiniMessage.miniMessage().deserialize(title));
         if (contents != null) inventory.setContents(loadItemStackArray(contents));
         if (storageContents != null) inventory.setStorageContents(loadItemStackArray(storageContents));
         return inventory;

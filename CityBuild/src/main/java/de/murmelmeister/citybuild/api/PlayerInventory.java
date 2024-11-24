@@ -1,48 +1,49 @@
 package de.murmelmeister.citybuild.api;
 
-import de.murmelmeister.citybuild.CityBuild;
-import de.murmelmeister.citybuild.util.FileUtil;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
+import de.murmelmeister.murmelapi.utils.Database;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.slf4j.Logger;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
-import java.util.UUID;
 
 public class PlayerInventory {
-    private final Logger logger;
-    private File file;
-    private YamlConfiguration config;
-
-    public PlayerInventory(final Logger logger) {
-        this.logger = logger;
+    public PlayerInventory() {
+        String tableName = "CB_UserInventory";
+        createTable(tableName);
+        Procedure.loadAll(tableName);
     }
 
-    public void reloadFile(UUID uuid) {
-        createFile(uuid);
+    private void createTable(String tableName) {
+        Database.createTable(tableName, "UserID INT PRIMARY KEY, Contents MEDIUMTEXT, StorageContents MEDIUMTEXT");
     }
 
-    private void createFile(UUID uuid) {
-        this.file = FileUtil.createFile(logger, CityBuild.getMainPath() + "/Inventories/", uuid.toString() + ".yml");
-        this.config = YamlConfiguration.loadConfiguration(this.file);
+    public boolean existInventory(int userId) {
+        return Database.callExists(Procedure.INVENTORY_GET.getName(), userId);
     }
 
-    private void saveFile() {
-        try {
-            this.config.save(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void createInventory(int userId, Inventory inventory) {
+        String contents = saveItems(inventory.getContents());
+        String storageContents = saveItems(inventory.getStorageContents());
+        Database.callUpdate(Procedure.INVENTORY_CREATE.getName(), userId, contents, storageContents);
     }
 
-    public boolean existFile(UUID uuid) {
-        File path = new File("./plugins/" + CityBuild.class.getSimpleName() + "/Inventories/", uuid.toString() + ".yml");
-        return path.exists();
+    public void deleteInventory(int userId) {
+        Database.callUpdate(Procedure.INVENTORY_DELETE.getName(), userId);
+    }
+
+    public void updateInventory(int userId, Inventory inventory) {
+        String contents = saveItems(inventory.getContents());
+        String storageContents = saveItems(inventory.getStorageContents());
+        Database.callUpdate(Procedure.INVENTORY_UPDATE.getName(), userId, contents, storageContents);
+    }
+
+    public ItemStack[] getContents(int userId) {
+        return loadItems(Database.callQuery(null, "Contents", String.class, Procedure.INVENTORY_GET.getName(), userId));
+    }
+
+    public ItemStack[] getStorageContents(int userId) {
+        return loadItems(Database.callQuery(null, "StorageContents", String.class, Procedure.INVENTORY_GET.getName(), userId));
     }
 
     public String saveItems(ItemStack[] items) {
@@ -86,23 +87,31 @@ public class PlayerInventory {
         }
     }
 
-    public void savePlayerInventory(UUID uuid, Inventory inventory) {
-        createFile(uuid);
-        String path = "Inventories.Player.";
-        String contents = saveItems(inventory.getContents());
-        String storageContents = saveItems(inventory.getStorageContents());
-        config.set(path + "Contents", contents);
-        config.set(path + "StorageContents", storageContents);
-        saveFile();
-    }
+    private enum Procedure {
+        INVENTORY_CREATE("PlayerInventory_Create", "uid INT, content MEDIUMTEXT, storage MEDIUMTEXT", "INSERT INTO [TABLE] VALUES (uid, content, storage);"),
+        INVENTORY_UPDATE("PlayerInventory_Update", "uid INT, content MEDIUMTEXT, storage MEDIUMTEXT", "UPDATE [TABLE] SET Contents=content, StorageContents=storage WHERE UserID=uid;"),
+        INVENTORY_DELETE("PlayerInventory_Delete", "uid INT", "DELETE FROM [TABLE] WHERE UserID=uid;"),
+        INVENTORY_GET("PlayerInventory_Get", "uid INT", "SELECT * FROM [TABLE] WHERE UserID=uid;");
+        private static final Procedure[] VALUES = values();
 
-    public Inventory loadPlayerInventory(UUID uuid) {
-        String path = "Inventories.Player.";
-        String contents = config.getString(path + "Contents");
-        String storageContents = config.getString(path + "StorageContents");
-        Inventory inventory = Bukkit.createInventory(null, 45, Component.text(uuid.toString(), NamedTextColor.DARK_PURPLE));
-        if (contents != null) inventory.setContents(loadItems(contents));
-        if (storageContents != null) inventory.setStorageContents(loadItems(storageContents));
-        return inventory;
+        private final String name;
+        private final String query;
+
+        Procedure(final String name, final String input, final String query) {
+            this.name = name;
+            this.query = Database.getProcedureQueryWithoutObjects(name, input, query);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getQuery(String tableName) {
+            return query.replace("[TABLE]", tableName);
+        }
+
+        private static void loadAll(String tableName) {
+            for (Procedure procedure : VALUES) Database.update(procedure.getQuery(tableName));
+        }
     }
 }

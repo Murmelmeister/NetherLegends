@@ -29,7 +29,6 @@ public class CityBuildReloadCommand extends CommandManager {
         this.config.reloadFile();
         this.message.reloadFile();
         this.locations.reloadFile();
-        this.itemValue.reloadFile();
 
         for (Player player : sender.getServer().getOnlinePlayers())
             player.closeInventory();

@@ -7,10 +7,12 @@ import de.murmelmeister.citybuild.api.nbt.NbtTagString;
 import de.murmelmeister.citybuild.command.CommandManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,13 +43,21 @@ public class InvseeCommand extends CommandManager {
             return true;
         }
 
-        if (!playerInventory.existFile(target.getUniqueId())) {
+        int targetId = user.getId(target.getUniqueId());
+        if (targetId == -2) {
             sendMessage(player, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
             return true;
         }
 
-        player.sendMessage("Reading player data...");
-        readData(player, target.getUniqueId());
+        if (!playerInventory.existInventory(targetId)) {
+            sendMessage(player, message.getString(Messages.NO_PLAYER_EXIST).replace("[PLAYER]", args[0]));
+            return true;
+        }
+
+        Inventory inventory = player.getServer().createInventory(null, 45, Component.text("Inventory of " + target.getName()));
+        inventory.setContents(playerInventory.getContents(targetId));
+        inventory.setStorageContents(playerInventory.getStorageContents(targetId));
+        player.openInventory(inventory);
         return true;
     }
 

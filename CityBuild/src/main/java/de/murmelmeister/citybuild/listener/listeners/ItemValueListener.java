@@ -18,13 +18,14 @@ public class ItemValueListener extends ListenerManager {
     public void testBlock(BlockDropItemEvent event) {
         for (Item item : event.getItems()) {
             Material material = item.getItemStack().getType();
-            item.setItemStack(itemValue.createItem(material));
+            //item.setItemStack(itemValue.createItem(material));
         }
     }
 
     @EventHandler
     public void testDeadEntity(EntityDeathEvent event) {
-        for (ItemStack itemStack : event.getDrops())
-            itemStack.setItemMeta(itemValue.createItemMeta(itemStack));
+        for (ItemStack itemStack : event.getDrops()) {
+            //itemStack.setItemMeta(itemValue.createItemMeta(itemStack));
+        }
     }
 }

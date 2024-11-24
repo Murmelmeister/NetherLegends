@@ -2,9 +2,10 @@ package de.murmelmeister.citybuild.command.commands;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.command.CommandManager;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -70,9 +71,9 @@ public class SignCommand extends CommandManager {
         ItemMeta itemMeta = itemStack.getItemMeta();
         SimpleDateFormat format = new SimpleDateFormat(config.getString(Configs.PATTERN_COMMAND_SIGN));
         String created = format.format(new Date());
-        List<String> loreList = new ArrayList<>(Arrays.asList(HexColor.format(lore), "\n"));
-        loreList.add(HexColor.format(message.getString(Messages.COMMAND_SIGN_CREATE).replace("[NAME]", player.getName()).replace("[DATE]", created.replace(" ", message.getString(Messages.COMMAND_SIGN_DATE)))));
-        itemMeta.setLore(loreList);
+        List<Component> loreList = new ArrayList<>(Arrays.asList(MiniMessage.miniMessage().deserialize(lore), Component.text("\n")));
+        loreList.add(MiniMessage.miniMessage().deserialize(message.getString(Messages.COMMAND_SIGN_CREATE).replace("[NAME]", player.getName()).replace("[DATE]", created.replace(" ", message.getString(Messages.COMMAND_SIGN_DATE)))));
+        itemMeta.lore(loreList);
         itemStack.setItemMeta(itemMeta);
     }
 }

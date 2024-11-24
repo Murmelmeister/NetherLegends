@@ -4,7 +4,6 @@ import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.Economy;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import de.murmelmeister.murmelapi.user.User;
@@ -34,72 +33,104 @@ public class TestScoreboard extends ScoreboardBuilder {
         final DecimalFormat decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
         final User user = plugin.getUser();
         final int userId = user.getId(player.getUniqueId());
-        setDisplayName(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_DISPLAY_NAME)));
+        setDisplayName(message.getString(Messages.SCOREBOARD_SCORE_DISPLAY_NAME));
 
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_15))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_15)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_15)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 15);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 15);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_14))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_14)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_14)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 14);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 14);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_13))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_13)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_13)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 13);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 13);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_12))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_12)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_12)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 12);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 12);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_11))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_11)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_11)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 11);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 11);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_10))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_10)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_10)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 10);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 10);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_9))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_9)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_9)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 9);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 9);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_8))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_8)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_8)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 8);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 8);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_7))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_7)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_7)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 7);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 7);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_6))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_6)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_6)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 6);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 6);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_5))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_5)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_5)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 5);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 5);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_4))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_4)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_4)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 4);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 4);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_3))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_3)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_3)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 3);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 3);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_2))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_2)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_2)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 2);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 2);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_1))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_1)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_1)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 1);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 1);
         if (config.getBoolean(Configs.SCOREBOARD_ENABLE_SCORE_0))
-            setScoreTeam(HexColor.format(message.getString(Messages.SCOREBOARD_SCORE_0)
+            setScoreTeam(message.getString(Messages.SCOREBOARD_SCORE_0)
                     .replace("[SERVER]", config.getString(Configs.CURRENT_SERVER))
-                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY)).replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))), 0);
+                    .replace("[CURRENCY]", config.getString(Configs.ECONOMY_CURRENCY))
+                    .replace("[MONEY]", decimalFormat.format(economy.getMoney(userId)))
+                    .replace("[BANK]", decimalFormat.format(economy.getBankMoney(userId))), 0);
 
     }
 }

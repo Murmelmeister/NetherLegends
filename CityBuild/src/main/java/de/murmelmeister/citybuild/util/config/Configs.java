@@ -86,6 +86,7 @@ public enum Configs {
     PERMISSION_SHOP_MENU("Permission.Shop.Menu", "citybuild.command.shop.menu"),
     PERMISSION_SHOP_CATEGORY("Permission.Shop.Category", "citybuild.command.shop.category"),
     PERMISSION_SHOP_ITEM("Permission.Shop.Item", "citybuild.command.shop.item"),
+    PERMISSION_BANK("Permission.Bank", "citybuild.command.bank"),
     COMMAND_ENABLE_ENDER_CHEST_COMMAND("Command.Enable.EnderChest.Command", true),
     COMMAND_ENABLE_ENDER_CHEST_USE("Command.Enable.EnderChest.Use", true),
     COMMAND_ENABLE_ENDER_CHEST_OTHER("Command.Enable.EnderChest.Other", true),
@@ -153,6 +154,7 @@ public enum Configs {
     COMMAND_ENABLE_SHOP_MENU("Command.Enable.Shop.Menu", true),
     COMMAND_ENABLE_SHOP_CATEGORY("Command.Enable.Shop.Category", true),
     COMMAND_ENABLE_SHOP_ITEM("Command.Enable.Shop.Item", true),
+    COMMAND_ENABLE_BANK("Command.Enable.Bank", true),
     EVENT_ENABLE_PLAYER_JOIN("Event.Enable.PlayerJoin", true),
     EVENT_ENABLE_PLAYER_QUIT("Event.Enable.PlayerQuit", true),
     EVENT_ENABLE_TELEPORT_TO_SPAWN("Event.Enable.TeleportToSpawn", true),
@@ -201,6 +203,11 @@ public enum Configs {
     MURMEL_API_CONFIG_FILE("MurmelAPI.Config.File", "mysql.properties"),
     SELL_ITEM_TITLE("Sell.Item.Title", "<#ccff88>Sell Menu"),
     SELL_ITEM_PLACEHOLDER("Sell.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    BANK_ITEM_TITLE("Sell.Item.Title", "<#ccff88>Bank Menu"),
+    BANK_ITEM_PLACEHOLDER("Sell.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    IMPORT_PATH("Import.Path", "/Import/"),
+    IMPORT_DATA_SHOP_ITEMS("Import.Data.ShopItems", "ShopItem.csv"),
+    IMPORT_DATA_SHOP_CATEGORIES("Import.Data.ShopCategories", "ShopCategory.csv"),
     ;
     public static final Configs[] VALUES = values();
 

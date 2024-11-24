@@ -8,13 +8,14 @@ import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.files.MySQL;
 import de.murmelmeister.citybuild.listener.ListenerManager;
+import de.murmelmeister.citybuild.util.ImportDataUtil;
 import de.murmelmeister.citybuild.util.ListUtil;
 import de.murmelmeister.citybuild.util.TablistUtil;
+import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.scoreboard.TestScoreboard;
 import de.murmelmeister.murmelapi.MurmelAPI;
 import de.murmelmeister.murmelapi.MurmelPlugin;
 import de.murmelmeister.murmelapi.user.User;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -33,7 +34,6 @@ public final class CityBuild extends MurmelPlugin {
     private Locations locations;
     private Homes homes;
     private Economy economy;
-    private ItemValue itemValue;
     private EnderChest enderChest;
     private PlayerInventory playerInventory;
     private CustomItems customItems;
@@ -49,16 +49,16 @@ public final class CityBuild extends MurmelPlugin {
     public void onLoad() {
         final Logger logger = getSLF4JLogger();
         this.config = new ConfigFile(logger);
+        ImportDataUtil.createDirectory(logger, getMainPath() + config.getString(Configs.IMPORT_PATH));
         this.mySQL = new MySQL(logger, config);
         mySQL.connect();
         this.listUtil = new ListUtil();
-        this.playerInventory = new PlayerInventory(logger);
+        this.playerInventory = new PlayerInventory();
         this.message = new MessageFile(logger);
         this.cooldown = new Cooldown(logger);
         this.locations = new Locations(logger, getServer());
         this.homes = new Homes();
         this.economy = new Economy();
-        this.itemValue = new ItemValue(logger, config, economy, getUser());
         this.enderChest = new EnderChest(logger, config, message);
         this.customItems = new CustomItems();
         this.shopCategory = new ShopCategory();
@@ -136,10 +136,6 @@ public final class CityBuild extends MurmelPlugin {
 
     public Economy getEconomy() {
         return economy;
-    }
-
-    public ItemValue getItemValue() {
-        return itemValue;
     }
 
     public EnderChest getEnderChest() {

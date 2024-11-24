@@ -134,13 +134,8 @@ commands:
     usage: /pay <player> <money>
     description: Send a player money.
   sell:
-    usage: /sell <hand|price>
+    usage: /sell <show|one|stack|inventory>
     description: Sell the item in your hand.
-  itemvalue:
-    usage: /itemvalue <get|set> <material> [price]
-    description: Edit the item values.
-    aliases:
-      - iv
   invsee:
     usage: /invsee <PLAYER>
     description: Open a player inventory.
@@ -153,3 +148,6 @@ commands:
   shop:
     usage: /shop
     description: Open the shop.
+  bank:
+    usage: /bank
+    description: Open the bank menu.

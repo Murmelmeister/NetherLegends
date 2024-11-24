@@ -3,7 +3,6 @@ package de.murmelmeister.citybuild.api.shop;
 import de.murmelmeister.citybuild.api.Economy;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
-import de.murmelmeister.citybuild.util.HexColor;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
 import de.murmelmeister.murmelapi.menu.Menu;
@@ -55,8 +54,8 @@ public final class ShopMenu extends MultipleMenu<String> {
 
     public void sendMessage(CommandSender sender, String message) {
         if (configFile.getBoolean(Configs.PREFIX_ENABLE))
-            sender.sendMessage(HexColor.format(this.messageFile.prefix() + message));
-        else sender.sendMessage(HexColor.format(message));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(this.messageFile.prefix() + message));
+        else sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
     }
 
     private static class CategoryItemMenu extends MultipleMenu<String> {

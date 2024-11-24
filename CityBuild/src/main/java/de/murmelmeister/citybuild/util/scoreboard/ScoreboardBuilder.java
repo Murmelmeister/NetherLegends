@@ -3,6 +3,7 @@ package de.murmelmeister.citybuild.util.scoreboard;
 import de.murmelmeister.citybuild.CityBuild;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
@@ -48,6 +49,10 @@ public abstract class ScoreboardBuilder implements Runnable {
     }
 
     protected void setDisplayName(String displayName) {
+        this.objective.displayName(MiniMessage.miniMessage().deserialize(displayName));
+    }
+
+    protected void setDisplayNameOld(String displayName) {
         this.objective.setDisplayName(displayName);
     }
 
@@ -67,6 +72,13 @@ public abstract class ScoreboardBuilder implements Runnable {
     }
 
     protected void setScoreTeam(String content, int score) {
+        Team team = getTeamByScore(score);
+        if (team == null) return;
+        team.prefix(MiniMessage.miniMessage().deserialize(content));
+        showScore(score);
+    }
+
+    protected void setScoreTeamOld(String content, int score) {
         Team team = getTeamByScore(score);
         if (team == null) return;
         team.setPrefix(content);

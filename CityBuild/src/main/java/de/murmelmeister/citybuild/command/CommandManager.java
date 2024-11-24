@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 
 public abstract class CommandManager implements TabExecutor {
     protected final Logger logger;
+    protected final Plugin plugin;
     protected final ListUtil listUtil;
     protected final User user;
     protected final ConfigFile config;
@@ -47,7 +48,6 @@ public abstract class CommandManager implements TabExecutor {
     protected final Locations locations;
     protected final Homes homes;
     protected final Economy economy;
-    protected final ItemValue itemValue;
     protected final EnderChest enderChest;
     protected final DecimalFormat decimalFormat;
     protected final PlayerInventory playerInventory;
@@ -57,6 +57,7 @@ public abstract class CommandManager implements TabExecutor {
 
     public CommandManager(CityBuild plugin) {
         this.logger = plugin.getSLF4JLogger();
+        this.plugin = plugin;
         this.listUtil = plugin.getListUtil();
         this.user = plugin.getUser();
         this.config = plugin.getConfigFile();
@@ -65,7 +66,6 @@ public abstract class CommandManager implements TabExecutor {
         this.locations = plugin.getLocations();
         this.homes = plugin.getHomes();
         this.economy = plugin.getEconomy();
-        this.itemValue = plugin.getItemValue();
         this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
         this.customItems = plugin.getCustomItems();
@@ -192,11 +192,11 @@ public abstract class CommandManager implements TabExecutor {
         addCommand(plugin, "gamemode", new GameModeCommand(plugin));
         addCommand(plugin, "pay", new PayCommand(plugin));
         addCommand(plugin, "sell", new SellCommand(plugin));
-        addCommand(plugin, "itemvalue", new ItemValueCommand(plugin));
         addCommand(plugin, "invsee", new InvseeCommand(plugin));
         addCommand(plugin, "shopcategory", new ShopCategoryCommand(plugin));
         addCommand(plugin, "shopitem", new ShopItemCommand(plugin));
         addCommand(plugin, "shop", new ShopCommand(plugin));
+        addCommand(plugin, "bank", new BankCommand(plugin));
     }
 
     private static void addCommand(Plugin plugin, String name, TabExecutor executor) {
