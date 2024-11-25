@@ -1,10 +1,13 @@
 package de.murmelmeister.citybuild.api.shop;
 
+import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.murmelapi.utils.Database;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -49,6 +52,8 @@ public final class ShopCategory {
         if (material == null) return null;
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        container.set(CityBuild.getKeyShopCategory(), PersistentDataType.BOOLEAN, true);
         itemMeta.displayName(MiniMessage.miniMessage().deserialize(getDisplayName(id)));
         itemStack.setItemMeta(itemMeta);
         return itemStack;

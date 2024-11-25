@@ -1,6 +1,7 @@
 package de.murmelmeister.citybuild;
 
 import de.murmelmeister.citybuild.api.*;
+import de.murmelmeister.citybuild.api.enderchest.EnderChestEditor;
 import de.murmelmeister.citybuild.api.shop.ShopCategory;
 import de.murmelmeister.citybuild.api.shop.ShopItem;
 import de.murmelmeister.citybuild.command.CommandManager;
@@ -34,11 +35,11 @@ public final class CityBuild extends MurmelPlugin {
     private Locations locations;
     private Homes homes;
     private Economy economy;
-    private EnderChest enderChest;
     private PlayerInventory playerInventory;
     private CustomItems customItems;
     private ShopCategory shopCategory;
     private ShopItem shopItem;
+    private EnderChestEditor enderChestEditor;
 
     private BukkitTask scoreboardTask;
     private BukkitTask tablistTask;
@@ -59,10 +60,10 @@ public final class CityBuild extends MurmelPlugin {
         this.locations = new Locations(logger, getServer());
         this.homes = new Homes();
         this.economy = new Economy(config);
-        this.enderChest = new EnderChest(logger, config, message);
         this.customItems = new CustomItems();
         this.shopCategory = new ShopCategory();
         this.shopItem = new ShopItem(customItems);
+        this.enderChestEditor = new EnderChestEditor(config);
     }
 
     @Override
@@ -102,6 +103,14 @@ public final class CityBuild extends MurmelPlugin {
         return "./plugins/" + CityBuild.class.getSimpleName();
     }
 
+    public static NamespacedKey getKeyEnderChest() {
+        return new NamespacedKey(getInstance(), "ender_chest");
+    }
+
+    public static NamespacedKey getKeyShopCategory() {
+        return new NamespacedKey(getInstance(), "shop_category");
+    }
+
     public static NamespacedKey getKeyShopItem() {
         return new NamespacedKey(getInstance(), "shop_item");
     }
@@ -138,10 +147,6 @@ public final class CityBuild extends MurmelPlugin {
         return economy;
     }
 
-    public EnderChest getEnderChest() {
-        return enderChest;
-    }
-
     public PlayerInventory getPlayerInventory() {
         return playerInventory;
     }
@@ -160,5 +165,9 @@ public final class CityBuild extends MurmelPlugin {
 
     public ShopItem getShopItem() {
         return shopItem;
+    }
+
+    public EnderChestEditor getEnderChestEditor() {
+        return enderChestEditor;
     }
 }

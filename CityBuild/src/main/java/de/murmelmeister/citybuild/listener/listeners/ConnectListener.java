@@ -4,12 +4,14 @@ import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.listener.ListenerManager;
 import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.citybuild.util.config.Messages;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 
 public class ConnectListener extends ListenerManager {
     public ConnectListener(CityBuild plugin) {
@@ -40,9 +42,6 @@ public class ConnectListener extends ListenerManager {
             economy.createUser(userId);
         }
 
-        for (int i = 1; i < 10; i++)
-            enderChest.setAccess(player.getUniqueId(), i, player.hasPermission(config.getString(Configs.PERMISSION_ENDER_CHEST_SLOTS) + "." + i));
-
         if (player.hasPermission(config.getString(Configs.PERMISSION_JOIN_FLY))) {
             player.setAllowFlight(true);
             player.setFlying(true);
@@ -65,6 +64,13 @@ public class ConnectListener extends ListenerManager {
 
         if (playerInventory.existInventory(userId)) playerInventory.setInventory(userId, player);
         else playerInventory.createOrUpdateInventory(userId, player, false);
+
+        for (int i = 1; i < config.getInt(Configs.ENDER_CHEST_LIMIT) + 1; i++) {
+            if (!enderChestEditor.exists(userId, i)) {
+                Inventory inventory = player.getServer().createInventory(null, 54, Component.text("")); // We need an empty inventory
+                enderChestEditor.createOrUpdate(userId, i, inventory, false);
+            }
+        }
     }
 
     @EventHandler

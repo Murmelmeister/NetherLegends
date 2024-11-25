@@ -2,6 +2,7 @@ package de.murmelmeister.citybuild.listener;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.*;
+import de.murmelmeister.citybuild.api.enderchest.EnderChestEditor;
 import de.murmelmeister.citybuild.files.ConfigFile;
 import de.murmelmeister.citybuild.files.MessageFile;
 import de.murmelmeister.citybuild.listener.listeners.*;
@@ -27,8 +28,8 @@ public class ListenerManager implements Listener {
     protected final Locations locations;
     protected final Homes homes;
     protected final Economy economy;
-    protected final EnderChest enderChest;
     protected final PlayerInventory playerInventory;
+    protected final EnderChestEditor enderChestEditor;
     protected final DecimalFormat decimalFormat;
 
     public ListenerManager(CityBuild plugin) {
@@ -41,15 +42,14 @@ public class ListenerManager implements Listener {
         this.locations = plugin.getLocations();
         this.homes = plugin.getHomes();
         this.economy = plugin.getEconomy();
-        this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
+        this.enderChestEditor = plugin.getEnderChestEditor();
         this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
     }
 
     public static void register(CityBuild plugin) {
         addListener(plugin, new GodModeListener(plugin));
         addListener(plugin, new ConnectListener(plugin));
-        addListener(plugin, new EnderChestListener(plugin));
         addListener(plugin, new RespawnListener(plugin));
         addListener(plugin, new LoggingListener(plugin));
         //addListener(new ItemValueListener(main));

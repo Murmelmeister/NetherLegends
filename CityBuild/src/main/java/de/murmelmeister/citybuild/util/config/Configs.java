@@ -176,23 +176,25 @@ public enum Configs {
     TIME_REPAIR_COOLDOWN("Time.Repair.Cooldown", 4 * 24 * 60 * 60 * 1000),
     TIME_RENAME_COOLDOWN("Time.Rename.Cooldown", 24 * 60 * 60 * 1000),
     ECONOMY_DEFAULT_MONEY("Economy.Default.Money", 100.0D),
-    MATERIAL_CASE("Material.Case", false),
-    ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", Material.LIME_STAINED_GLASS_PANE.toString()),
-    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", Material.RED_STAINED_GLASS_PANE.toString()),
     SHOP_CATEGORY_TITLE("Shop.Category.Title", "<#ccff88>Shop Menu"),
     SHOP_CATEGORY_PLACEHOLDER("Shop.Category.Placeholder", "BLACK_STAINED_GLASS_PANE"),
     SHOP_ITEM_TITLE("Shop.Item.Title", "<#ccff88>[CATEGORY] Items"),
     SHOP_ITEM_PLACEHOLDER("Shop.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
     MURMEL_API_CONFIG_PATH("MurmelAPI.Config.Path", "./"),
     MURMEL_API_CONFIG_FILE("MurmelAPI.Config.File", "mysql.properties"),
-    SELL_ITEM_TITLE("Sell.Item.Title", "<#ccff88>Sell Menu"),
-    SELL_ITEM_PLACEHOLDER("Sell.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
-    BANK_ITEM_TITLE("Sell.Item.Title", "<#ccff88>Bank Menu"),
-    BANK_ITEM_PLACEHOLDER("Sell.Item.Placeholder", "BLACK_STAINED_GLASS_PANE"),
     IMPORT_PATH("Import.Path", "/Import/"),
     IMPORT_DATA_SHOP_ITEMS("Import.Data.ShopItems", "ShopItem.csv"),
     IMPORT_DATA_SHOP_CATEGORIES("Import.Data.ShopCategories", "ShopCategory.csv"),
-    ;
+    ENDER_CHEST_SIZE("EnderChest.Size", 54),
+    ENDER_CHEST_TITLE("EnderChest.Title", "<#ccff88>EnderChest"),
+    ENDER_CHEST_PLACEHOLDER("EnderChest.Placeholder", "BLACK_STAINED_GLASS_PANE"),
+    ENDER_CHEST_SLOT_TITLE("EnderChest.Slot.Title", "<#ccff88>EnderChest - [SLOT]"),
+    ENDER_CHEST_LIMIT("EnderChest.Limit", 9),
+    ENDER_CHEST_PERMISSION("EnderChest.Permission", "citybuild.command.enderchest.[SLOT]"),
+    ENDER_CHEST_MATERIAL_LOCKED("EnderChest.Material.Locked", Material.RED_STAINED_GLASS_PANE.name()),
+    ENDER_CHEST_MATERIAL_UNLOCKED("EnderChest.Material.Unlocked", Material.LIME_STAINED_GLASS_PANE.name()),
+    ENDER_CHEST_DISPLAY_NAME_LOCKED("EnderChest.DisplayName.Locked", "<#ff0000>Locked Slot [SLOT]"),
+    ENDER_CHEST_DISPLAY_NAME_UNLOCKED("EnderChest.DisplayName.Unlocked", "<#00ff00>Slot [SLOT]"),;
     public static final Configs[] VALUES = values();
 
     private final String path;

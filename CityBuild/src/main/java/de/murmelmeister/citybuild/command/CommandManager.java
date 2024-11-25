@@ -2,6 +2,7 @@ package de.murmelmeister.citybuild.command;
 
 import de.murmelmeister.citybuild.CityBuild;
 import de.murmelmeister.citybuild.api.*;
+import de.murmelmeister.citybuild.api.enderchest.EnderChestEditor;
 import de.murmelmeister.citybuild.api.shop.ShopCategory;
 import de.murmelmeister.citybuild.api.shop.ShopItem;
 import de.murmelmeister.citybuild.command.commands.*;
@@ -40,7 +41,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public abstract class CommandManager implements TabExecutor {
@@ -54,12 +54,12 @@ public abstract class CommandManager implements TabExecutor {
     protected final Locations locations;
     protected final Homes homes;
     protected final Economy economy;
-    protected final EnderChest enderChest;
     protected final DecimalFormat decimalFormat;
     protected final PlayerInventory playerInventory;
     protected final CustomItems customItems;
     protected final ShopCategory shopCategory;
     protected final ShopItem shopItem;
+    protected final EnderChestEditor enderChestEditor;
 
     public CommandManager(CityBuild plugin) {
         this.logger = plugin.getSLF4JLogger();
@@ -72,11 +72,11 @@ public abstract class CommandManager implements TabExecutor {
         this.locations = plugin.getLocations();
         this.homes = plugin.getHomes();
         this.economy = plugin.getEconomy();
-        this.enderChest = plugin.getEnderChest();
         this.playerInventory = plugin.getPlayerInventory();
         this.customItems = plugin.getCustomItems();
         this.shopCategory = plugin.getShopCategory();
         this.shopItem = plugin.getShopItem();
+        this.enderChestEditor = plugin.getEnderChestEditor();
         this.decimalFormat = new DecimalFormat(config.getString(Configs.PATTERN_DECIMAL));
     }
 
