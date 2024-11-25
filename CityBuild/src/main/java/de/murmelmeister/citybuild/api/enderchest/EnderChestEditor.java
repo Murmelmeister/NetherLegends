@@ -19,8 +19,6 @@ import static de.murmelmeister.citybuild.util.InventoryUtil.loadItems;
 import static de.murmelmeister.citybuild.util.InventoryUtil.saveItems;
 
 public final class EnderChestEditor {
-    public static final String METADATA_KEY = "EnderChestEditor";
-    public static final String METADATA_VALUE = "EnderChestInventory";
     private final ConfigFile configFile;
 
     public EnderChestEditor(ConfigFile configFile) {
@@ -39,13 +37,8 @@ public final class EnderChestEditor {
     }
 
     public void createOrUpdate(int userId, int slot, Inventory inventory, boolean update) {
-        System.out.println("Save Content: " + Arrays.toString(inventory.getContents()));
-        System.out.println("Save StorageContent: " + Arrays.toString(inventory.getStorageContents()));
-
         ItemStack[] contents = inventory.getContents();
-
         if (contents.length > 0) contents = Arrays.copyOf(contents, contents.length - 9);
-        System.out.println("Save Content edited: " + Arrays.toString(contents));
 
         String content = saveItems(contents);
         String storageContent = saveItems(inventory.getStorageContents());
@@ -74,9 +67,6 @@ public final class EnderChestEditor {
     public void setInventory(int userId, int slot, Inventory inventory) {
         ItemStack[] contents = getContents(userId, slot);
         ItemStack[] storageContents = getStorageContents(userId, slot);
-
-        System.out.println("Load Contents: " + Arrays.toString(contents));
-        System.out.println("Load StorageContents: " + Arrays.toString(storageContents));
 
         inventory.setContents(contents);
         inventory.setStorageContents(storageContents);
