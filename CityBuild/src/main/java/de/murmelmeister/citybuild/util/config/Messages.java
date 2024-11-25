@@ -136,6 +136,7 @@ public enum Messages {
     COMMAND_SELL_LOGGER_STACK("Command.Sell.Logger.Stack", "[PLAYER] has sold [AMOUNT]x [ITEM] and got [MONEY] money for it!"),
     COMMAND_SELL_LOGGER_INVENTORY("Command.Sell.Logger.Inventory", "[PLAYER] has sold [AMOUNT]x [ITEM] and got [MONEY] money for it!"),
     SHOP_ITEM_IMPORT("Shop.Item.Import", "<#919292>Importing items from file: <#f6ff00>[FILE]"),
+    SHOP_CATEGORY_IMPORT("Shop.Category.Import", "<#919292>Importing categories from file: <#f6ff00>[FILE]"),
     MOJANG_PROFILE_NOT_FOUND("Mojang.Profile.NotFound", "<#d31c49>Couldn't find any profile with name <#f6ff00>[USERNAME]"),
     BANK_USAGE("Bank.Usage", "<gray>Current money: <aqua>[MONEY]\n<gray>Current bank money: <aqua>[BANK]" +
                              "\n<aqua>/bank deposit <amount> <gray>- Deposit money to your bank account" +

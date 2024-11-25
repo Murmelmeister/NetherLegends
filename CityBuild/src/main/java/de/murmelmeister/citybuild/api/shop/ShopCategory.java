@@ -1,6 +1,8 @@
 package de.murmelmeister.citybuild.api.shop;
 
 import de.murmelmeister.citybuild.CityBuild;
+import de.murmelmeister.citybuild.files.ConfigFile;
+import de.murmelmeister.citybuild.util.config.Configs;
 import de.murmelmeister.murmelapi.utils.Database;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -8,7 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.slf4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 public final class ShopCategory {
@@ -31,6 +38,36 @@ public final class ShopCategory {
         if (displayName.length() > 255) throw new IllegalArgumentException("DisplayName is too long. Max length is 255 characters");
         if (icon.name().length() > 255) throw new IllegalArgumentException("IconItem is too long. Max length is 255 characters");
         Database.callUpdate(Procedure.CATEGORY_CREATE.getName(), id, displayName, icon.name());
+    }
+
+    public void importCategories(Logger logger, ConfigFile config) {
+        String filePath = CityBuild.getMainPath() + config.getString(Configs.IMPORT_PATH) + config.getString(Configs.IMPORT_DATA_SHOP_CATEGORIES);
+        File file = new File(filePath);
+        logger.info("Importing categories from file: {}", file.getName());
+        if (!file.exists()) {
+            logger.error("File not found: {}", file.getName());
+            return;
+        }
+
+        logger.info("Reading file: {}", file.getName());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length != 3) {
+                    logger.error("Invalid line: {}", line);
+                    continue;
+                }
+                String id = data[0];
+                String displayName = data[1];
+                Material icon = Material.getMaterial(data[2].toUpperCase());
+                if (existCategory(id)) updateCategory(id, displayName, icon);
+                else addCategory(id, displayName, icon);
+            }
+        } catch (IOException e) {
+            logger.error("Error while reading file: {}", file.getName(), e);
+        }
+        logger.info("Importing categories from file: {} finished", file.getName());
     }
 
     public void removeCategory(ShopItem item, String id) {
